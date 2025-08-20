@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title id="page-title">تفاصيل المقال | مساحة</title>
+  <meta name="description" id="meta-description" content="تفاصيل المقال — مساحة" />
+  <link rel="canonical" href="" id="canonical-link" />
+
+  
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="ar_AR" />
+  <meta property="og:site_name" content="مساحة" />
+  <meta property="og:title" id="og-title" content="تفاصيل المقال | مساحة" />
+  <meta property="og:description" id="og-desc" content="تفاصيل المقال — مساحة" />
+  <meta property="og:image" id="og-image" content="" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="robots" content="index,follow" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { overflow-x: hidden; }
+    .glow-border { box-shadow: 0 0 0 4px #a78bfa33, 0 0 40px 10px #6d28d933; border-radius: 1rem; }
+    .cosmic-bg { background: radial-gradient(ellipse at 70% 30%, #a78bfa33 0%, #312e81 100%); }
+    .floating-shape { position: absolute; border-radius: 50%; opacity: 0.18; filter: blur(8px); animation: float 8s ease-in-out infinite; }
+    @keyframes float { 0%,100%{ transform: translateY(0) scale(1);} 50%{ transform: translateY(-30px) scale(1.08);} }
+    .prose h1, .prose h2, .prose h3 { color: #a78bfa; }
+    .prose code { background: #18181b; color: #f472b6; padding: 0.2em 0.4em; border-radius: 0.3em; }
+    .prose pre { background: #18181b; color: #f472b6; border-radius: 0.6rem; padding: 1rem; }
+    /* small utilities */
+    .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.04), rgba(255,255,255,0.02)); animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0%{ opacity: 0.6 } 50%{ opacity: 1 } 100%{ opacity: 0.6 } }
+  </style>
+
+  <!-- DOMPurify for sanitizing HTML content before innerHTML -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js" defer></script>
+
+  <!-- structured data: will be updated by post-page.js -->
+  <script id="ld-json" type="application/ld+json">{}</script>
+</head>
+<body class="bg-black text-white font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="w-full py-6 px-4 md:px-12 flex items-center justify-between cosmic-bg shadow-lg z-10 relative">
+    <a href="/" class="flex items-center gap-2 text-2xl font-bold text-purple-300 hover:text-indigo-400 transition" aria-label="العودة إلى الرئيسية">مساحة</a>
+    <div class="flex items-center gap-3">
+      <button id="darkModeToggle" class="p-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded focus:outline-none focus:ring-2 focus:ring-purple-500" aria-label="تبديل الوضع الليلي">🌙</button>
+      <a href="/" class="text-purple-300 hover:text-indigo-400">الرئيسية</a>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-1 flex items-center justify-center px-4 py-10 md:py-20 relative">
+    <article id="post-article" class="w-full max-w-3xl bg-gray-900/80 glow-border p-6 md:p-10 relative z-10 backdrop-blur-xl shadow-2xl">
+      <!-- Post header -->
+      <header class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 id="post-title" class="text-2xl md:text-3xl font-bold mb-2 leading-tight text-purple-200">...</h1>
+          <div class="flex items-center gap-3 text-sm text-purple-400">
+            <time id="post-time" datetime="">...</time>
+            <span id="post-readtime" class="text-purple-300">⏱ 5 دقائق</span>
+            <span id="post-category" class="ml-2 bg-purple-900/40 px-2 py-1 rounded text-xs">عام</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <img id="post-author-avatar" src="https://api.dicebear.com/7.x/identicon/svg?seed=author" alt="صورة الكاتب" class="w-12 h-12 rounded-full border-2 border-purple-500 shadow-lg" />
+          <div class="text-right">
+            <div id="post-author" class="text-purple-300 font-medium">...</div>
+            <div id="post-meta" class="text-xs text-gray-400">معرّف المقال: <span id="post-id-meta" class="text-gray-300"></span></div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Post summary/excerpt -->
+      <h2 id="post-excerpt" class="mb-4 font-semibold text-gray-300">...</h2>
+
+      <!-- Post content (sanitized) -->
+      <section id="post-content" class="prose prose-invert max-w-none text-lg leading-relaxed">
+        <!-- content gets injected here -->
+        <div class="skeleton h-48 rounded"></div>
+      </section>
+
+      <footer class="mt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-t border-purple-800/30 pt-6">
+        <div class="flex items-center gap-2 text-sm text-purple-400">
+          <span>شارك المقال:</span>
+          <a id="share-twitter" href="#" target="_blank" rel="noopener" class="hover:text-pink-400">تويتر</a>
+          <a id="share-facebook" href="#" target="_blank" rel="noopener" class="hover:text-indigo-400">فيسبوك</a>
+        </div>
+        <a href="/" class="text-purple-300 hover:text-indigo-400 transition">← العودة للرئيسية</a>
+      </footer>
+
+      <!-- Comments -->
+      <section id="comments-section" class="mt-10">
+        <h3 class="text-xl font-bold text-purple-200 mb-4">التعليقات <span id="comments-count" class="text-sm text-gray-400">...</span></h3>
+
+        <!-- New comment form (shown if user logged in) -->
+        <div id="comment-form-wrap" class="mb-6 hidden">
+          <textarea id="comment-input" rows="3" class="w-full rounded bg-gray-800 text-white p-3" placeholder="اكتب تعليقك هنا..." aria-label="نص التعليق"></textarea>
+          <div class="flex justify-end mt-2 gap-2">
+            <button id="send-comment" class="bg-purple-600 px-4 py-2 rounded text-white">إرسال</button>
+          </div>
+          <div id="comment-form-feedback" class="text-xs mt-2 text-gray-400"></div>
+        </div>
+
+        <!-- Prompt to login if not authenticated -->
+        <div id="comment-login-prompt" class="mb-6 text-sm text-gray-400">
+          <a href="/assets/login.html" class="text-purple-300 hover:underline">سجل الدخول</a> للتعليق والمشاركة.
+        </div>
+
+        <!-- Recent comments box (first few) -->
+        <div id="recent-comments" class="space-y-4 mb-4"></div>
+
+        <!-- Load more -->
+        <div class="text-center mt-4">
+          <button id="load-more-comments" class="px-4 py-2 rounded bg-gray-800 text-purple-300 hidden">عرض المزيد</button>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <!-- Footer small -->
+  <footer class="py-6 text-center text-xs text-gray-500">
+    © <span id="site-year"></span> مساحة — جميع الحقوق محفوظة
+  </footer>
+
+  <!-- SCRIPTS -->
+  <!-- utils first (helper functions) -->
+  <script type="module" src="/Scripts/ScriptsPost/utils.js" defer></script>
+  <script type="module" src="/Scripts/ScriptsPost/post-page.js" defer></script>
+  <script type="module" src="/Scripts/ScriptsPost/post-comments.js" defer></script>
+
+</body>
+</html>

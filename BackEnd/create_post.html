@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إنشاء تدوينة جديدة | منصة المدونات</title>
+
+  <!-- TinyMCE CDN -->
+  <script src="https://cdn.tiny.cloud/1/jwa5cln5hm28n9159vklr60pocfa51yq21f8pghelap3y29a/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+    
+    :root {
+      --primary-color: #8b5cf6;
+      --primary-dark: #7c3aed;
+      --secondary-color: #4f46e5;
+      --bg-dark: #1f2937;
+      --text-light: #f3f4f6;
+    }
+    
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: var(--text-light);
+      min-height: 100vh;
+    }
+    
+    .inspiration-card {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+    
+    .glow-button {
+      transition: all 0.3s ease;
+    }
+    
+    .glow-button:hover {
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
+    }
+    
+    /* Tailwind doesn't generate these by default */
+    .form-focus-ring:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.5);
+      border-color: var(--primary-color);
+    }
+    
+    /* Add scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #2d3748;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #4c1d95;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6d28d9;
+    }
+  </style>
+</head>
+<body class="p-4 md:p-0">
+  <div class="max-w-5xl mx-auto my-8">
+    <nav class="mb-8 p-4 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl flex justify-between items-center">
+      <a href="../index.html" class="text-white flex items-center gap-2 hover:text-purple-300 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        العودة للرئيسية
+      </a>
+      <span class="text-purple-300 font-bold">لوحة الإدارة</span>
+    </nav>
+    
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Main content -->
+      <div class="w-full lg:w-2/3">
+        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 shadow-lg">
+          <h1 class="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            إنشاء تدوينة جديدة
+          </h1>
+          
+          <form id="postForm" class="space-y-6">
+            <div>
+              <label for="post-title" class="block text-sm font-medium text-gray-300 mb-1">عنوان المقال</label>
+              <input 
+                type="text" 
+                id="post-title"
+                name="title" 
+                required
+                placeholder="أدخل عنواناً مميزاً لمقالك..."
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 form-focus-ring transition-colors focus:bg-gray-800"
+                aria-describedby="title-description"
+              >
+              <p id="title-description" class="mt-1 text-sm text-gray-400">العنوان الجذاب هو أول ما يلفت انتباه القارئ</p>
+            </div>
+            
+            <div>
+              <label for="post-excerpt" class="block text-sm font-medium text-gray-300 mb-1">مقتطف المقال</label>
+              <textarea 
+                id="post-excerpt"
+                name="excerpt" 
+                rows="2"
+                placeholder="اكتب نبذة مختصرة تصف محتوى مقالك (ستظهر في صفحة المقالات)..."
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 form-focus-ring transition-colors focus:bg-gray-800"
+                aria-describedby="excerpt-description"
+              ></textarea>
+              <p id="excerpt-description" class="mt-1 text-sm text-gray-400">سيظهر هذا النص في صفحة المقالات لجذب القراء</p>
+            </div>
+            
+            <div>
+              <label for="post-status" class="block text-sm font-medium text-gray-300 mb-1">حالة المقال</label>
+              <select 
+                id="post-status"
+                name="status" 
+                class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white form-focus-ring transition-colors focus:bg-gray-800"
+              >
+                <option value="draft">مسودة</option>
+                <option value="published">منشور</option>
+                <option value="archive">مؤرشفة</option>
+
+
+              </select>
+            </div>
+            
+            <div>
+              <label for="your-textarea-id" class="block text-sm font-medium text-gray-300 mb-1">محتوى المقال</label>
+              <textarea id="your-textarea-id" name="content"></textarea>
+              <p class="mt-1 text-sm text-gray-400">استخدم أدوات التنسيق لإثراء محتوى مقالك</p>
+            </div>
+            
+            <div class="flex items-center justify-between pt-4 border-t border-gray-700">
+              <button type="button" id="saveAsDraft" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800">
+                حفظ كمسودة
+              </button>
+              
+              <button type="submit" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-lg glow-button transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800">
+                نشر المقال
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Sidebar -->
+      <div class="w-full lg:w-1/3 space-y-6">
+        <!-- Inspiration card -->
+        <div class="bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl p-6 shadow-lg inspiration-card">
+          <h3 class="text-xl font-bold text-white mb-3">التدوين أكثر من مجرد كتابة...</h3>
+          <p class="text-purple-200 mb-4">
+            التدوين رحلة لتبادل الأفكار وإثراء العقول. كل كلمة تكتبها هي فرصة لمشاركة فكرة قد تلهم الآخرين وتغير حياتهم. اكتب بشغف، واجعل صدى كلماتك يتردد في عقول قرائك.
+          </p>
+          <div class="text-xs text-purple-300 italic">— فريق المنصة</div>
+        </div>
+        
+        <!-- Tips card -->
+        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 shadow-lg">
+          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            نصائح للكتابة المؤثرة
+          </h3>
+          <ul class="space-y-3 text-gray-300">
+            <li class="flex items-start gap-2">
+              <span class="text-purple-400 mt-1">•</span>
+              <span>اختر عنواناً جذاباً يلخص محتوى مقالك</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-purple-400 mt-1">•</span>
+              <span>استخدم فقرات قصيرة ومترابطة لتسهيل القراءة</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-purple-400 mt-1">•</span>
+              <span>دعم أفكارك بالأمثلة والأدلة عند الإمكان</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-purple-400 mt-1">•</span>
+              <span>ضع خاتمة تلخص الأفكار الرئيسية في مقالك</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-purple-400 mt-1">•</span>
+              <span>راجع المقال قبل النشر للتأكد من خلوه من الأخطاء</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Success notification - hidden by default -->
+    <div id="success-notification" class="fixed bottom-4 left-4 bg-green-800 bg-opacity-90 backdrop-blur-sm text-white px-6 py-3 rounded-lg shadow-lg hidden transform transition-all duration-500 translate-y-10 opacity-0">
+      <div class="flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span id="notification-message">تم حفظ المقال بنجاح!</span>
+      </div>
+    </div>
+  </div>
+  
+  <script src="../Scripts/save-post.js" defer></script>
+</body>
+</html>

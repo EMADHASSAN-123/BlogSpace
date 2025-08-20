@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  
+
+<div>
+  <p>إجمالي الزيارات: <span id="total-visits">0</span></p>
+  <p>الزوار الفريدين: <span id="unique-ips">0</span></p>
+  <p>أكثر صفحة زيارة: <span id="top-page">N/A</span></p>
+  <p>أكثر مصدر إحالة: <span id="top-source">N/A</span></p>
+</div>
+
+  <script>
+async function loadStats() {
+  try {
+    
+    const res = await fetch('https://vbnnzmhopcjlkvtuubcj.supabase.co/functions/v1/get-stats');
+    const stats = await res.json();
+
+    if (res.ok) {
+      document.getElementById("total-visits").textContent = stats.total_visits;
+      document.getElementById("unique-ips").textContent = stats.unique_ips;
+      document.getElementById("top-page").textContent = stats.top_page || "N/A";
+      document.getElementById("top-source").textContent = stats.top_source || "N/A";
+    } else {
+      console.error(stats.error || stats.message);
+    }
+  } catch (err) {
+    console.error("Error loading stats:", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadStats);
+</script>
+
+</body>
+</html>
