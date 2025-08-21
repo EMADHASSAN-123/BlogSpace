@@ -1,5 +1,5 @@
-import { supabase } from './supabaseClient.js';
-import { openPostEditor } from './editor.js';
+import { supabase } from 'supabaseClient.js';
+import { openPostEditor } from 'editor.js';
 
 
 const postsContainer = document.getElementById('postsContainer');

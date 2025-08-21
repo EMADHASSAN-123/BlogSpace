@@ -1,9 +1,9 @@
-import { AuthManager } from './managers/AuthManager.js';
-import { ThemeManager } from './managers/ThemeManager.js';
-import { SectionManager } from './managers/SectionManager.js';
-import { PostManager } from './managers/PostManager.js';
-import { ChartManager } from './managers/ChartManager.js';
-import { UserManager } from './managers/UserManager.js';
+import { AuthManager } from 'managers/AuthManager.js';
+import { ThemeManager } from 'managers/ThemeManager.js';
+import { SectionManager } from 'managers/SectionManager.js';
+import { PostManager } from 'managers/PostManager.js';
+import { ChartManager } from 'managers/ChartManager.js';
+import { UserManager } from 'managers/UserManager.js';
 
 class Dashboard {
   constructor() {

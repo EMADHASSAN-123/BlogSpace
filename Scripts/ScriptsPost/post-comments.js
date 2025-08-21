@@ -1,5 +1,5 @@
 // /Scripts/post-comments.js
-import { getQueryParam, timeAgo, escapeHTMLText, avatarFor } from './utils.js';
+import { getQueryParam, timeAgo, escapeHTMLText, avatarFor } from 'utils.js';
 import { supabase } from '../supabaseClient.js';
 
 // config

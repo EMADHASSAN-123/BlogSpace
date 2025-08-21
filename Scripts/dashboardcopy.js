@@ -1,6 +1,6 @@
 // Import necessary modules
-import { supabase } from './supabaseClient.js';
-import { protectPage } from './auth-guard.js';
+import { supabase } from 'supabaseClient.js';
+import { protectPage } from 'auth-guard.js';
 
 // Check if user is authenticated, redirect to login if not
 protectPage();

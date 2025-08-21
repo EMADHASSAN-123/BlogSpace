@@ -27,7 +27,7 @@ export function escapeHTMLText(str = '') {
 export function avatarFor(seed = 'default') {
   return `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(seed)}`;
 }
-
+ 
 // helper for toggling skeletons / loading states
 export function createSkeleton(height = 48) {
   const el = document.createElement('div');

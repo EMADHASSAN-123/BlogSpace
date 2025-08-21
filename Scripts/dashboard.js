@@ -1,8 +1,8 @@
 // Import necessary modules
-import { supabase } from './supabaseClient.js';
-import { protectPage } from './auth-guard.js';
-import { loadPosts } from './load-posts.js';
-import { closePostEditor , openPostEditor ,initTinyMCE }  from './editor.js';
+import { supabase } from 'supabaseClient.js';
+import { protectPage } from 'auth-guard.js';
+import { loadPosts } from 'load-posts.js';
+import { closePostEditor , openPostEditor ,initTinyMCE }  from 'editor.js';
 
 
 // Check if user is authenticated, redirect to login if not
