@@ -4,22 +4,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>مساحتي — مدونة شخصية متوافقة مع إمكانية الوصول</title>
+  <title>مساحة تدوين شخصية — محاكاة لصراع في حياة مهندس  </title>
   <meta name="description" content="مساحة لعرض المقالات والمشاريع — تصميم مع مراعاة معايير الوصول WCAG" />
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* Helpers */
+    /* Box sizing مفيد للتعامل مع الحشو والحدود */
+    *, *::before, *::after { box-sizing: border-box; }
+
     :root {
       --focus-color: #ffb86b;
       --primary: #6c63ff;
       --vanta-accent-hex: #8B5CF6;
-      /* electric purple */
       --vanta-bg-hex: #071025;
     }
 
-    body {
+    /* بعد إصلاح المصادر نمنع overflow-x العام لتفادي شريط أفقي غير مرغوب */
+    html, body {
       overflow-x: hidden;
+      min-height: 100%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     /* رابط التخطي (يظهر عند التركيز فقط) */
@@ -31,7 +36,6 @@
       height: 1px;
       overflow: hidden;
     }
-
     .skip-link:focus {
       left: 1rem;
       top: 1rem;
@@ -57,26 +61,37 @@
     }
 
     /* Focus-visible واضح */
-    a:focus,
-    button:focus,
-    input:focus {
+    a:focus, button:focus, input:focus {
       outline: 3px solid var(--focus-color);
       outline-offset: 2px;
     }
 
-    /* Reduced motion support */
     @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0s !important;
-        transition-duration: 0s !important;
-        scroll-behavior: auto !important;
-      }
+      * { animation-duration: 0s !important; transition-duration: 0s !important; scroll-behavior: auto !important; }
     }
 
-    /* تصحيحات بسيطة للهيكل المتحرك */
-    #sticky-bar[aria-hidden="true"] {
-      display: none;
+    /* تصحيح إخفاء الشريط المتحرك */
+    #sticky-bar[aria-hidden="true"] { display: none; }
+
+    /* Vanta/bg full-bleed: لا تستخدم 100vw هنا */
+    #vanta-bg, .footer-wave-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      left: 0;
+      right: 0;
+      box-sizing: border-box;
     }
+
+    .icon-btn { transition: transform .16s ease, box-shadow .16s ease; }
+    .icon-btn:focus, .icon-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(99,102,241,0.12); }
+    /* hamburger -> X animation simple fade swap */
+    .drawer-panel { transition: transform .34s cubic-bezier(.2,.9,.2,1); }
+    .backdrop-layer { transition: opacity .28s ease; }
+    /* ensure big tappable areas */
+    .tap { padding: .5rem; border-radius: .5rem; }
+    
+    .footer-wave-container { top: auto; bottom: auto; pointer-events: none; }
 
     #hero-title-visual {
       position: relative;
@@ -88,22 +103,20 @@
       padding: 0 1rem;
       text-align: center;
       pointer-events: none;
-      /* منع التداخل مع الفأرة */
+      width: 100%;
     }
 
-    /* صندوق النص في الوسط (الذي يحتوي على الكلمات) */
     .hero-center {
       pointer-events: auto;
       display: inline-block;
-      /* يسمح بالالتفاف الطبيعي للكلمات */
       max-width: 92%;
+      width: 100%;
       line-height: 1.6;
-      /* تباعد بين السطور لتحسين القابلية للقراءة */
       text-align: center;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
     }
 
-
-    /* كل كلمة تظهر كعنصر منفصل لتمكين التأخيرات */
     .hero-word {
       display: inline-block;
       opacity: 0;
@@ -113,69 +126,134 @@
       color: #ffffff;
       font-weight: 700;
       text-shadow: 0 8px 30px rgba(7, 6, 20, 0.6);
-      font-size: clamp(1.1rem, 4.6vw, 2.2rem);
-      /* متجاوب */
+      font-size: clamp(1rem, 4.6vw, 2.2rem);
       margin-inline-end: 0.6rem;
-      /* مسافة أفقية بين الكلمات (يحترم RTL/LTR) */
       margin-bottom: 0.45rem;
-      /* مسافة رأسية بين الأسطر عند الالتفاف */
-      word-break: keep-all;
-      /* نحاول إبقاء الكلمات غير مقطوعة */
+      word-break: break-word;      /* يسمح بكسر الكلمات الطويلة */
+      overflow-wrap: anywhere;     /* دعم إضافي */
+      white-space: normal;
     }
 
-    .hero-word.show {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+    .hero-word.show { opacity: 1; transform: translateY(0) scale(1); }
 
-    /* سطر الوصف تحت العبارة */
-
-
-    /* أن يقلل الحركة للأجهزة التي تطلب ذلك */
     @media (prefers-reduced-motion: reduce) {
-      .hero-word {
-        transition: none;
-        transform: none;
-        opacity: 1;
-      }
+      .hero-word { transition: none; transform: none; opacity: 1; }
+    }
+
+    /* منع عناصر flex من إجبار الصف على التمدد: أضف min-width:0 للعناصر داخل flex */
+    .flex-minfix > * , .flex > * { min-width: 0; }
+
+    /* بطاقات ديناميكية */
+    .post-card { min-width: 0; word-break: break-word; overflow-wrap: anywhere; }
+
+    /* صور/svg/iframes لا تتجاوز الحاوية */
+    img, svg, picture, iframe, video { max-width: 100%; height: auto; display: block; }
+
+    /* تحسينات الفوتر */
+    .footer-identity { min-width: 0; }
+    .footer-avatar { max-width: 100%; height: auto; }
+
+    /* تقليل padding/margin على الأجهزة الصغيرة */
+    @media (max-width: 420px) {
+      .container { padding-left: 0.5rem; padding-right: 0.5rem; }
+      #hero-title-visual { padding-left: 0.5rem; padding-right: 0.5rem; margin-top: 0.5rem; }
+      .footer-wave-container { height: 40px; }
+      .hero-word { font-size: 1rem; margin-inline-end: 0.35rem; }
     }
   </style>
 </head>
 
 <body class="bg-black text-white font-sans">
 
-  <!-- Skip link مفيد للوحة المفاتيح -->
+  <!-- Skip link -->
   <a href="#main-content" class="skip-link">تخطي إلى المحتوى</a>
 
-  <!-- Header + Navigation (دلالي) -->
-  <header role="banner" class="relative z-20">
-    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <a href="#hero-section" class="text-xl font-semibold" aria-label="العودة إلى الأعلى">🚀 تجوّل مساحتي</a>
+  <!-- Header + Navigation -->
+<header id="site-header" class="fixed inset-x-0 top-0 z-50 bg-black/50 backdrop-blur-md border-b border-white/6">
+  <div class="mx-auto max-w-[1200px] px-4">
+    <div class="flex items-center justify-between h-14 md:h-16 gap-2">
+      <!-- Brand (on the right for RTL) -->
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="#hero-section" class="flex items-center gap-3 min-w-0" aria-label="العودة إلى الأعلى">
+          <img src="assets/picture2.webp" alt="شعار/صورة" class="w-9 h-9 rounded-full object-cover ring-2 ring-white/6" />
+          <span class="hidden md:inline-block text-white font-semibold truncate">عماد حسان</span>
+        </a>
       </div>
 
-      <nav id="main-nav" role="navigation" aria-label="القائمة الرئيسية">
-        <ul class="flex gap-3 list-none m-0 p-0">
-          <li><a href="#hero-section" class="text-gray-300 hover:text-purple-300">الرئيسية</a></li>
-          <li><a href="#posts-container" class="text-gray-300 hover:text-purple-300">المقالات</a></li>
-          <li><a href="#circular-posts-section" class="text-gray-300 hover:text-purple-300">المواضيع</a></li>
-          <li><a href="#about" class="text-gray-300 hover:text-purple-300">حول</a></li>
-        </ul>
-      </nav>
+      <!-- Center: search (shown on md+) -->
+      <div class="hidden md:flex items-center flex-1 justify-center px-4">
+        <form role="search" class="w-full max-w-lg" onsubmit="event.preventDefault(); /* call your search handler */">
+          <label for="site-search" class="sr-only">ابحث في الموقع</label>
+          <div class="flex items-center bg-white/6 rounded-full px-3 py-1.5 border border-white/6 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+            <span aria-hidden="true">🔎</span>
+            <input id="site-search" name="q" autocomplete="off"
+                   class="flex-1 bg-transparent text-sm text-gray-100 placeholder:text-gray-400 outline-none"
+                   placeholder="ابحث عن مقال أو موضوع..." />
+          </div>
+        </form>
+      </div>
 
-      <!-- أدوات سريعة: تبديل الثيم، إيقاف الخلفية -->
+      <!-- Actions (left in RTL) -->
       <div class="flex items-center gap-2">
-        <button id="darkModeToggle" class="px-3 py-2 rounded" aria-pressed="false"
-          aria-label="تبديل الوضع الداكن">🌙</button>
-        <button id="toggle-vanta" class="px-3 py-2 rounded" aria-pressed="false"
-          aria-label="إيقاف/تشغيل تأثير الخلفية">⏯️</button>
+        <!-- Notifications -->
+        <div class="relative">
+          <button id="notif-button" aria-haspopup="true" aria-expanded="false" aria-controls="notif-pop" title="الإشعارات"
+                  class="p-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 bg-white/6">
+            🔔
+            <!-- Badge -->
+            <span id="notif-badge" class="absolute -top-1 -left-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-medium leading-none text-white bg-red-500 rounded-full transform-gpu">
+              0
+            </span>
+            <span class="sr-only">عدد الإشعارات</span>
+          </button>
+
+          <!-- Notifications popover -->
+          <div id="notif-pop" role="region" aria-live="polite" aria-label="قائمة الإشعارات"
+               class="hidden absolute left-0 mt-2 w-80 max-h-64 overflow-auto bg-neutral-900/95 border border-white/6 rounded-md p-3 shadow-lg">
+            <div id="notif-list" class="flex flex-col gap-2">
+              <!-- إشعارات ديناميكية هنا -->
+              <div class="text-sm text-gray-400">لا توجد إشعارات</div>
+            </div>
+            <div class="mt-3 text-center">
+              <button id="mark-read" class="text-xs px-3 py-1 rounded-full border border-white/6">تمييز كمقروءة</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shortcut / quick link -->
+        <a href="#posts-container" class="hidden md:inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm">المقالات</a>
+
+        <!-- Theme toggle -->
+        <button id="theme-toggle" aria-pressed="false" class="p-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 bg-white/6" title="تبديل الوضع">
+          🌓
+        </button>
+
+        <!-- Mobile hamburger -->
+        <button id="mobile-toggle" aria-controls="mobile-menu" aria-expanded="false" class="md:hidden p-2 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400" title="فتح القائمة">
+          ☰
+          <span class="sr-only">فتح القائمة</span>
+        </button>
       </div>
     </div>
-  </header>
+  </div>
 
-  <!-- شريط ثابت يظهر عند التمرير؛ إدارة aria-hidden عند الإخفاء -->
-  <div id="sticky-bar" aria-hidden="true"
-    class="fixed top-0 left-0 right-0 z-50 bg-black/70 backdrop-blur-md border-b border-purple-600/20">
+  <!-- Mobile menu sheet (accessible) -->
+  <div id="mobile-menu" class="md:hidden fixed inset-x-0 top-[56px] z-40 hidden">
+    <div class="bg-black/95 backdrop-blur-md h-[calc(100vh-56px)] overflow-auto p-6">
+      <nav class="flex flex-col gap-4" aria-label="القائمة الرئيسية">
+        <a href="#hero-section" class="text-lg text-white">الرئيسية</a>
+        <a href="#posts-container" class="text-lg text-white">المقالات</a>
+        <a href="#circular-posts-section" class="text-lg text-white">المواضيع</a>
+        <a href="#about" class="text-lg text-white">حول</a>
+        <hr class="border-white/6 my-3" />
+        <button id="mobile-theme-toggle" class="text-left text-white/90">تبديل الوضع</button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+  <!-- شريط ثابت -->
+  <div id="sticky-bar" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 bg-black/70 backdrop-blur-md border-b border-purple-600/20">
     <div class="container mx-auto px-4 py-3">
       <div class="flex items-center justify-between">
         <div id="nav-title" class="text-white text-lg">تجوّل مساحتي</div>
@@ -184,45 +262,37 @@
           <ul class="flex gap-2 list-none m-0 p-0">
             <li><a href="#hero-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">الرئيسية</a></li>
             <li><a href="#posts-container" class="px-3 py-2 text-sm text-gray-300 focus:underline">المقالات</a></li>
-            <li><a href="#circular-posts-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">المواضيع</a>
-            </li>
+            <li><a href="#circular-posts-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">المواضيع</a></li>
           </ul>
         </nav>
       </div>
     </div>
   </div>
 
-  <!-- قسم الهيرو — ملاحظة: العنوان المتحرك سيكون aria-hidden والنسخة النصية ستكون متاحة لبرامج القراءة -->
   <main id="main-content" role="main" class="relative">
 
     <section id="hero-section" class="relative min-h-screen flex flex-col items-center justify-center text-center px-6">
-      <!-- خلفية Vanta -->
       <div id="vanta-bg" class="absolute inset-0 z-0" aria-hidden="true"></div>
 
-      <!-- نسخة صالحة لبرامج قراءة الشاشة: نص العنوان الكامل -->
       <h1 class="visually-hidden">هذه مساحتي الخاصة لأكتب عن رحلتي كمهندس، بين شغف التعلم وتجارب الحياة اليومية.</h1>
 
-      <!-- العرض المرئي للعناوين (حروف متحركة) — مخفي عن قارئ الشاشة -->
       <div id="hero-title-visual" aria-hidden="true" class="relative z-10 mx-auto mt-10 max-w-3xl">
-        <!-- الحروف تُدرج برمجياً كما في كودك الأصلي -->
+        <!-- سيتم ملؤه برمجياً -->
       </div>
 
-      <p class="relative z-10 text-gray-300 max-w-2xl mx-auto mt-4">استعرض أفكاري، مشاريعي، وتأملاتي التقنية بطريقة
-        مرئية وتفاعلية</p>
+      <p class="relative z-10 text-gray-300 max-w-2xl mx-auto mt-4">استعرض أفكاري، مشاريعي، وتأملاتي التقنية بطريقة مرئية وتفاعلية</p>
 
       <div class="relative z-10 w-full max-w-xl mt-8">
         <div class="mx-auto p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 text-center">
-          <button id="explore-button" class="text-lg text-white hover:text-indigo-400 transition"
-            aria-controls="posts-container">
+          <button id="explore-button" class="text-lg text-white hover:text-indigo-400 transition" aria-controls="posts-container">
             تجوّل مساحتي
           </button>
         </div>
       </div>
     </section>
 
-    <!-- قسم المقالات (مهيكل) -->
-    <section id="circular-posts-section" class="relative w-full bg-gradient-to-b from-black to-indigo-950 py-16"
-      aria-labelledby="posts-heading">
+    <!-- قسم المقالات -->
+    <section id="circular-posts-section" class="relative w-full bg-gradient-to-b from-black to-indigo-950 py-16" aria-labelledby="posts-heading">
       <div class="container mx-auto px-4">
         <div id="posts-container" class="relative z-10 max-w-5xl mx-auto">
           <header class="text-center mb-8">
@@ -230,94 +300,70 @@
             <p class="text-gray-400 mt-2">اختر الفئة أو تصفّح أحدث المقالات</p>
           </header>
 
-          <!-- أزرار فلترة بترتيب دلالي -->
           <div class="flex justify-center mb-6" role="tablist" aria-label="فئات المقالات">
-            <button role="tab" aria-selected="true"
-              class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white focus:outline-none"
-              data-category="all">الكل</button>
-            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none"
-              data-category="tech">تقنية</button>
-            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none"
-              data-category="personal">شخصي</button>
-            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none"
-              data-category="prog">مشاريع</button>
+            <button role="tab" aria-selected="true" class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white focus:outline-none" data-category="all">الكل</button>
+            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none" data-category="tech">تقنية</button>
+            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none" data-category="personal">شخصي</button>
+            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none" data-category="prog">مشاريع</button>
           </div>
 
           <!-- مقال مميز -->
-          <article id="featured-post"
-            class="bg-gradient-to-br from-gray-900 to-indigo-950/90 backdrop-blur-lg rounded-xl p-6 mb-8 border border-purple-500/50"
-            aria-labelledby="featured-title">
+          <article id="featured-post" class="bg-gradient-to-br from-gray-900 to-indigo-950/90 backdrop-blur-lg rounded-xl p-6 mb-8 border border-purple-500/50" aria-labelledby="featured-title">
             <div class="mb-2">
               <span class="bg-purple-600/80 text-white text-xs px-3 py-1 rounded-full inline-block">مقال مميز</span>
             </div>
             <h3 id="featured-title" class="text-xl md:text-2xl font-bold">عنوان المقال المميز</h3>
-            <p id="featured-excerpt" class="text-gray-300 mt-3">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة...
-            </p>
+            <p id="featured-excerpt" class="text-gray-300 mt-3">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة...</p>
 
-            <div class="flex items-center justify-between mt-4">
+            <div class="flex items-center justify-between mt-4 flex-minfix">
               <span id="featured-date" class="text-xs text-purple-300">منذ 3 أيام</span>
               <div class="flex gap-2">
-                <button id="featured-read-more"
-                  class="px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
-                  aria-label="قراءة المزيد عن المقال المميز">قراءة المزيد</button>
+                <button id="featured-read-more" class="px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white" aria-label="قراءة المزيد عن المقال المميز">قراءة المزيد</button>
               </div>
             </div>
           </article>
 
-          <!-- شبكة المشاركات: تعطي تنبيهًا للمستخدمين عند إضافة محتوى جديد -->
-          <section id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" aria-live="polite"
-            aria-label="قائمة المقالات">
-            <!-- بطاقات المشاركات تُدرج ديناميكيًا هنا -->
+          <!-- شبكة المشاركات: البطاقات تُدرج ديناميكيًا -->
+          <section id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" aria-live="polite" aria-label="قائمة المقالات">
+            <!-- بطاقاتك الديناميكية ستُدرَج هنا (كل بطاقة يجب أن تحمل class="post-card") -->
           </section>
 
           <div class="text-center mt-8">
-            <button id="load-more" class="px-6 py-2 rounded-full border border-purple-500/30"
-              aria-controls="posts-grid">تحميل المزيد</button>
+            <button id="load-more" class="px-6 py-2 rounded-full border border-purple-500/30" aria-controls="posts-grid">تحميل المزيد</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- قسم معلومات/حول -->
-
   </main>
 
-  <!-- Footer دلالي -->
-  <footer role="contentinfo" class="relative bg-gradient-to-t from-black/90 via-neutral-900 to-transparent pt-10"
-    aria-label="تذييل الصفحة">
-     
+  <footer role="contentinfo" class="relative bg-gradient-to-t from-black/90 via-neutral-900 to-transparent pt-10" aria-label="تذييل الصفحة">
     <div class="footer-wave-container pointer-events-none absolute inset-x-0 -top-6 overflow-hidden leading-none" style="height:50px;">
-    <svg class="relative block w-full h-full" viewBox="0 0 1200 50" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,30 C150,70 350,0 600,30 C850,60 1050,10 1200,30 L1200,50 L0,50 Z" fill="#0b1220"></path>
-    </svg>
-  </div>
+      <svg class="relative block w-full h-full" viewBox="0 0 1200 50" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,30 C150,70 350,0 600,30 C850,60 1050,10 1200,30 L1200,50 L0,50 Z" fill="#0b1220"></path>
+      </svg>
+    </div>
 
     <div class="container mx-auto px-6 pb-10">
-      <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
-        <!-- منطقة الهوية -->
-        <div class="flex items-center gap-4 md:gap-6" style="min-width:260px;">
-          <div class="relative ">
-            <img src="assets/picture2.webp" alt="صورة عماد حسان" 
-              class="w-28 h-20 md:w-30 md:h-28 rounded-full ring-4 ring-black/60 shadow-lg object-cover" loading="lazy"/>
-            <!-- <span class="absolute  -left-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-xs text-white px-2 py-0.5 rounded-full shadow-sm">  تطوير وتصميم  </span> -->
+      <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 flex-minfix">
+        <div class="flex items-center gap-4 md:gap-6 footer-identity">
+          <div class="relative">
+            <img src="assets/picture2.webp" alt="صورة عماد حسان" class="w-24 h-24 md:w-28 md:h-28 rounded-full ring-4 ring-black/60 shadow-lg object-cover footer-avatar" loading="lazy"/>
           </div>
 
-          <div>
-            <p class="text-lg font-semibold">عماد حسان</p>
-            <p class="text-sm text-gray-300 max-w-xs">مساحة تجريبية لعرض مشاريعي وأفكاري — تصميم مبسّط، تجربة مركّزة،
-              واهتمام بالوصول.</p>
+          <div class="min-w-0">
+            <p class="text-lg font-semibold truncate">عماد حسان</p>
+            <p class="text-sm text-gray-300 max-w-xs truncate">مساحة تجريبية لعرض مشاريعي وأفكاري — تصميم مبسّط، تجربة مركّزة، واهتمام بالوصول.</p>
           </div>
         </div>
 
-        <!-- روابط -->
         <nav aria-label="روابط الموقع" class="grid grid-cols-2 gap-4 md:gap-8">
           <div>
             <h4 class="text-sm font-medium text-gray-200 mb-2">استكشف</h4>
             <ul class="space-y-2">
               <li><a href="#hero-section" class="text-gray-300 hover:text-white focus:underline">الرئيسية</a></li>
               <li><a href="#posts-container" class="text-gray-300 hover:text-white focus:underline">المقالات</a></li>
-              <li><a href="#circular-posts-section" class="text-gray-300 hover:text-white focus:underline">المواضيع</a>
-              </li>
+              <li><a href="#circular-posts-section" class="text-gray-300 hover:text-white focus:underline">المواضيع</a></li>
             </ul>
           </div>
 
@@ -332,48 +378,37 @@
         </nav>
 
         <div class="flex flex-col items-center md:items-end gap-3">
-          <!-- مساحات جاهزة للتوسعة (أيقونات التواصل أزلتها كما طلبت) -->
           <div class="flex items-center gap-3">
             <div class="text-right">
-              <p class="text-sm font-medium">  افكار اضافية </p>
-              <p class="text-xs text-gray-400"> اذا لديك افكار اضافية او لاحظت اشياء لم تتضح لك اخبرني بها  </p>
+              <p class="text-sm font-medium">افكار اضافية</p>
+              <p class="text-xs text-gray-400">اذا لديك افكار اضافية او لاحظت اشياء لم تتضح لك اخبرني بها</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- سطر سفلي -->
       <div class="mt-8 pt-6 border-t border-white/6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <p class="text-sm text-gray-400">© <span id="footer-year"></span> — مساحتي الشخصية — "حيث تتقاطع الأفكار مع
-          التنفيذ"</p>
+        <p class="text-sm text-gray-400">© <span id="footer-year"></span> — مساحتي الشخصية — "حيث تتقاطع الأفكار مع التنفيذ"</p>
         <div class="flex items-center gap-4">
           <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline">شروط الاستخدام</a>
           <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline">خريطة الموقع</a>
-          <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline"
-            title="تم التطوير بواسطة عماد حسان">تطوير: عماد</a>
+          <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline" title="تم التطوير بواسطة عماد حسان">تطوير: عماد</a>
         </div>
       </div>
     </div>
-
-    <script>
-      // تحديث السنة تلقائيًا
-      try { document.getElementById('footer-year').textContent = new Date().getFullYear(); } catch (e) { }
-    </script>
   </footer>
 
-
   <script>
+    // تحديث السنة تلقائيًا
+    try { document.getElementById('footer-year').textContent = new Date().getFullYear(); } catch (e) { }
 
-
+    // عناصر DOM أساسية
     const exploreBtn = document.getElementById('explore-button');
-    const postsContainer = document.getElementById('posts-container');
     const stickyBar = document.getElementById('sticky-bar');
     const navTitle = document.getElementById('nav-title');
-    const toggleVantaBtn = document.getElementById('toggle-vanta'); // معلن مرة واحدة
-    const darkModeToggle = document.getElementById('darkModeToggle');
+    const toggleVantaBtn = document.getElementById('toggle-vanta');
 
-    /* ==== تمرير إلى القسم عند الضغط على زر الاستكشاف ==== */
-    
+    // تمرير إلى القسم عند الضغط
     if (exploreBtn) {
       exploreBtn.addEventListener('click', () => {
         const target = document.getElementById('posts-container');
@@ -381,23 +416,19 @@
       });
     }
 
-    /* ==== إدارة شريط التنقل الثابت (للوصول) ==== */
-   
+    // شريط التنقل الثابت
     window.addEventListener('scroll', () => {
       const scrollPosition = window.scrollY || window.pageYOffset;
       if (scrollPosition > 100) {
         stickyBar.removeAttribute('aria-hidden');
-        stickyBar.classList.remove('hidden');
-        stickyBar.classList.add('translate-y-0');
         const postsTop = document.getElementById('posts-container') ? document.getElementById('posts-container').getBoundingClientRect().top + window.scrollY : Infinity;
         navTitle.textContent = (scrollPosition >= postsTop) ? '📚 المقالات' : 'تجوّل مساحتي';
       } else {
         stickyBar.setAttribute('aria-hidden', 'true');
-        stickyBar.classList.add('hidden');
       }
     });
 
-
+    // smooth scrolling للروابط داخل الصفحة
     document.querySelectorAll('#sticky-bar nav a, #main-nav a').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
@@ -406,24 +437,28 @@
           if (targetElement) {
             e.preventDefault();
             targetElement.scrollIntoView({ behavior: 'smooth' });
-            setTimeout(() => {
-              try { targetElement.focus({ preventScroll: true }); } catch (e) { }
-            }, 500);
+            setTimeout(() => { try { targetElement.focus({ preventScroll: true }); } catch (e) { } }, 500);
           }
         }
       });
     });
 
-    /* ==== تهيئة/إيقاف خلفية VANTA مع زر التبديل ==== */
-    let vantaEffect = null;
-    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // همبرغر للموبايل
+    const mobileToggle = document.getElementById('mobile-nav-toggle');
+    const mainNav = document.getElementById('main-nav');
+    if (mobileToggle && mainNav) {
+      mobileToggle.addEventListener('click', () => {
+        const isOpen = mainNav.classList.contains('block');
+        mobileToggle.setAttribute('aria-expanded', String(!isOpen));
+        mainNav.classList.toggle('hidden');
+        mainNav.classList.toggle('block');
+      });
+    }
 
-
+    // Vanta (مبسط)
     function createVanta() {
       if (!window.VANTA || !window.VANTA.NET) return false;
-      if (window._vanta_running) return true; // حماية من التهيئة المزدوجة
-
-      // نستخدم الـ ints المطابقة للـ HEX المذكور
+      if (window._vanta_running) return true;
       window._vanta_instance = window.VANTA.NET({
         el: "#vanta-bg",
         mouseControls: true,
@@ -432,16 +467,19 @@
         minWidth: 200.00,
         scale: 1.00,
         scaleMobile: 1.00,
-        color: 0x8b5cf6,        // electric purple
-        backgroundColor: 0x071025 // very dark indigo
-        // يمكنك إضافة خصائص إضافية إذا رغبت (مثل: spacing, showDots, maxDistance...)
+        color: 0x8b5cf6,
+        backgroundColor: 0x071025
       });
-
       window._vanta_running = true;
       return true;
     }
+    function destroyVanta() {
+      try { if (window._vanta_instance && typeof window._vanta_instance.destroy === 'function') window._vanta_instance.destroy(); } catch (e) {}
+      window._vanta_instance = null;
+      window._vanta_running = false;
+    }
 
-
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function initVantaIfAllowed() {
       if (!toggleVantaBtn) return;
       if (prefersReducedMotion) {
@@ -449,9 +487,6 @@
         toggleVantaBtn.textContent = 'الحركة معطلة (prefers-reduced-motion)';
         return;
       }
-
-
-
       if (createVanta()) {
         toggleVantaBtn.setAttribute('aria-pressed', 'false');
         toggleVantaBtn.textContent = '⏯️ إيقاف تأثير الخلفية';
@@ -461,172 +496,246 @@
       }
     }
 
-    function destroyVanta() {
-      try {
-        if (window._vanta_instance && typeof window._vanta_instance.destroy === 'function') {
-          window._vanta_instance.destroy();
-        }
-      } catch (e) { }
-      window._vanta_instance = null;
-      window._vanta_running = false;
-    }
-
+    // أنيميشن عبارة الهيرو (مبسط وآمن)
     const heroPhrase = "مساحتي الخاصة لأكتب عن رحلتي كمهندس، بين شغف التعلم وتجارب الحياة اليومية. أشارك نفسي المتعبة أولا ثم الآخرين";
-
-
-
-
-
-    function animateHeroPhrase(options = {}) {
+    function animateHeroPhrase() {
       const container = document.getElementById('hero-title-visual');
-      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!container) return;
-      // نضع نسخة مقروءة لقراء الشاشة مسبقًا (عناصر مخفية مرئيًا)
-      // (إذا كان لديك h1 بصري مخفي فهو يكفي؛ لكن هذه الطريقة تضمن أن القارئ يرى النص الكامل)
+
+      // نسخة لقرّاء الشاشة
       const sr = document.createElement('div');
       sr.className = 'visually-hidden';
-      sr.textContent = heroPhrase;//+ " — " + heroSub
+      sr.textContent = heroPhrase;
       container.appendChild(sr);
 
-      // العرض المرئي داخل الـ hero (hidden aria)
       const visualWrap = document.createElement('div');
       visualWrap.className = 'hero-center';
       visualWrap.setAttribute('aria-hidden', 'true');
 
-      // إن رغب المستخدم بتقليل الحركة، نعرض النص كـ plain text بدون أنيميشن
-      if (prefersReducedMotion) {
+      if (prefersReduced) {
         const p = document.createElement('p');
         p.className = 'hero-word';
         p.style.opacity = 1;
         p.style.transform = 'none';
         p.textContent = heroPhrase;
         visualWrap.appendChild(p);
-
         container.appendChild(visualWrap);
         return;
       }
 
-      // تقسيم العبارة إلى كلمات وعرض تدريجي
       const words = heroPhrase.split(' ');
       words.forEach((word, i) => {
         const span = document.createElement('span');
         span.className = 'hero-word';
         span.textContent = word + (i < words.length - 1 ? ' ' : '');
-        // نستخدم تأخيرًا يتم وضعه كسلوك مباشر بدلاً من إنشاء keyframes مكررة
-        span.style.transitionDelay = (i * 130) + 'ms';
+        span.style.transitionDelay = (i * 120) + 'ms';
         visualWrap.appendChild(span);
+        setTimeout(() => span.classList.add('show'), 50 + i * 120);
       });
-
-
-
       container.appendChild(visualWrap);
     }
 
-      window.addEventListener('load', function () {
-        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        // إذا لم يطلب المستخدم تقليل الحركة نهيئ Vanta تلقائيًا
-        if (!prefersReducedMotion) {
-          // ننتظر مكتبات Vanta (قد تكون محملة بـ defer) ـ نجرب عدة مرات قصيرة
-          let tries = 0;
-          const maxTries = 8;
-          const t = setInterval(() => {
-            tries++;
-            if (window.VANTA && window.VANTA.NET) {
-              clearInterval(t);
-              createVanta(); // تهيئة بألوان المطابقة
-            } else if (tries >= maxTries) {
-              clearInterval(t);
-            }
-          }, 250);
-        }
-
-        // بدء أنيميشن العبارة (مع مراعاة reduced-motion داخلياً)
-        animateHeroPhrase();
-      });
-
-      // تنظيف عند الخروج
-      window.addEventListener('beforeunload', function () {
-        destroyVanta();
-      });
-
-      // إذا أردت ربط الزر لإيقاف/تشغيل: يفترض أنك تملك #toggle-vanta
-      const toggleBtn = document.getElementById('toggle-vanta');
-      if (toggleBtn) {
-        toggleBtn.addEventListener('click', function () {
-          const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          if (prefersReduced) {
-            this.setAttribute('aria-pressed', 'true');
-            this.textContent = 'الحركة معطلة (prefers-reduced-motion)';
-            return;
+    // تهيئة عند التحميل + فحص overflow (تشخيصي)
+    window.addEventListener('load', function () {
+      // تهيئة Vanta إن أمكن
+      if (!prefersReducedMotion) {
+        let tries = 0;
+        const maxTries = 8;
+        const t = setInterval(() => {
+          tries++;
+          if (window.VANTA && window.VANTA.NET) {
+            clearInterval(t);
+            createVanta();
+          } else if (tries >= maxTries) {
+            clearInterval(t);
           }
-
-          const isOff = this.getAttribute('aria-pressed') === 'true' || !window._vanta_running;
-          if (isOff) {
-            // شغّل
-            if (createVanta()) {
-              this.setAttribute('aria-pressed', 'false');
-              this.textContent = '⏯️ إيقاف تأثير الخلفية';
-            }
-          } else {
-            // أوقف
-            destroyVanta();
-            this.setAttribute('aria-pressed', 'true');
-            this.textContent = '✅ الخلفية متوقفة';
-          }
-        });
+        }, 250);
       }
+      animateHeroPhrase();
+      initVantaIfAllowed();
 
-      if (toggleVantaBtn) {
-        toggleVantaBtn.addEventListener('click', function () {
-          if (prefersReducedMotion) {
-            this.setAttribute('aria-pressed', 'true');
-            this.textContent = 'الحركة معطلة (prefers-reduced-motion)';
-            return;
-          }
-
-          const isStopped = this.getAttribute('aria-pressed') === 'true';
-          if (isStopped || !vantaEffect) {
-            if (createVanta()) {
-              this.setAttribute('aria-pressed', 'false');
-              this.textContent = '⏯️ إيقاف تأثير الخلفية';
-            } else {
-              this.textContent = 'جارٍ تهيئة الخلفية...';
-              let tries = 0;
-              const tryInterval = setInterval(() => {
-                tries++;
-                if (createVanta()) {
-                  this.setAttribute('aria-pressed', 'false');
-                  this.textContent = '⏯️ إيقاف تأثير الخلفية';
-                  clearInterval(tryInterval);
-                } else if (tries > 6) {
-                  this.textContent = 'تعذر تشغيل الخلفية';
-                  clearInterval(tryInterval);
-                }
-              }, 300);
-            }
-          } else {
-            destroyVanta();
-          }
+      // --- فحص العناصر التي تسبب overflow أفقي إذا بقي شيء ---
+      (function findOverflowing() {
+        const docW = document.documentElement.clientWidth;
+        const nodes = [...document.querySelectorAll('body *')];
+        const overflowing = nodes.filter(el => {
+          try {
+            return el.offsetWidth > docW + 1;
+          } catch (e) { return false; }
         });
-      }
-
-      /* تنظيف عند مغادرة الصفحة لتحرير الذاكرة */
-      window.addEventListener('beforeunload', function () {
-        if (vantaEffect && typeof vantaEffect.destroy === 'function') {
-          try { vantaEffect.destroy(); } catch (e) { }
-          vantaEffect = null;
+        if (!overflowing.length) {
+          console.info('لا يوجد عناصر تتجاوز العرض (horizontal overflow).');
+        } else {
+          console.warn('عناصر تسبب overflow أفقياً:', overflowing);
+          overflowing.forEach(el => {
+            console.log('>>>', el, 'offsetWidth=', el.offsetWidth, 'docWidth=', docW);
+            el.style.outline = '3px solid rgba(255,0,0,0.6)'; // إطار مؤقت مرئي
+            // أيضاً نضيف hint attribute لسهولة البحث في DOM
+            el.setAttribute('data-debug-overflow', 'true');
+          });
         }
-      });
- 
+      })();
+    });
+
+    // تنظيف عند الخروج
+    window.addEventListener('beforeunload', function () {
+      destroyVanta();
+    });
   </script>
 
-  // <!-- ملفات خارجية -->
+  <!-- ملفات خارجية -->
   <script type="module" src="Scripts/get-posts.js"></script>
   <script type="module" src="Scripts/log-visit.js"></script>
+ <script>
+  (function () {
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const themeToggle = document.getElementById('theme-toggle');
+  const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
 
+  // MOBILE MENU TOGGLE + accessibility focus management
+  if (mobileToggle && mobileMenu) {
+    mobileToggle.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('hidden') ? false : true;
+      mobileToggle.setAttribute('aria-expanded', String(open));
+      // lock body scroll when open
+      document.body.style.overflow = open ? 'hidden' : '';
+      if (open) {
+        // focus first link
+        const firstLink = mobileMenu.querySelector('a, button');
+        if (firstLink) firstLink.focus();
+      }
+    });
 
+    // close mobile menu with Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.add('hidden');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        mobileToggle.focus();
+      }
+    });
+  }
+
+  // THEME TOGGLE (persists)
+  function setTheme(isDark) {
+    document.documentElement.classList.toggle('dark', isDark);
+    themeToggle.setAttribute('aria-pressed', String(!!isDark));
+    localStorage.setItem('prefersDark', isDark ? '1' : '0');
+  }
+  // init theme
+  try {
+    const pref = localStorage.getItem('prefersDark');
+    if (pref !== null) setTheme(pref === '1');
+  } catch (e) { /* ignore */ }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => setTheme(!document.documentElement.classList.contains('dark')));
+  }
+  if (mobileThemeToggle) {
+    mobileThemeToggle.addEventListener('click', () => setTheme(!document.documentElement.classList.contains('dark')));
+  }
+
+  // NOTIFICATIONS: popover + badge + aria
+  const notifBtn = document.getElementById('notif-button');
+  const notifPop = document.getElementById('notif-pop');
+  const notifBadge = document.getElementById('notif-badge');
+  const notifList = document.getElementById('notif-list');
+  const markReadBtn = document.getElementById('mark-read');
+
+  function openNotif(open) {
+    if (!notifBtn || !notifPop) return;
+    if (open) {
+      notifPop.classList.remove('hidden');
+      notifBtn.setAttribute('aria-expanded', 'true');
+      // focus first notification or pop container
+      setTimeout(()=> {
+        const first = notifPop.querySelector('a, button, [tabindex]');
+        if (first) first.focus();
+      }, 50);
+    } else {
+      notifPop.classList.add('hidden');
+      notifBtn.setAttribute('aria-expanded', 'false');
+      notifBtn.focus();
+    }
+  }
+
+  if (notifBtn) {
+    notifBtn.addEventListener('click', () => {
+      const isOpen = notifPop && !notifPop.classList.contains('hidden');
+      openNotif(!isOpen);
+    });
+    // close with Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && notifPop && !notifPop.classList.contains('hidden')) {
+        openNotif(false);
+      }
+    });
+    // click outside to close
+    document.addEventListener('click', (e) => {
+      if (!notifPop || !notifBtn) return;
+      if (!notifPop.contains(e.target) && !notifBtn.contains(e.target)) {
+        openNotif(false);
+      }
+    });
+  }
+
+  // Function: update notification count and list (call this from your API/websocket)
+  function updateNotifications({ count = 0, items = [] } = {}) {
+    // update badge
+    if (notifBadge) {
+      notifBadge.textContent = count > 99 ? '99+' : String(count);
+      notifBadge.style.display = count > 0 ? 'inline-flex' : 'none';
+      // aria-live hint
+      notifBadge.setAttribute('aria-label', `${count} إشعار`);
+    }
+    // update list
+    if (notifList) {
+      notifList.innerHTML = ''; // clear
+      if (!items || items.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'text-sm text-gray-400';
+        empty.textContent = 'لا توجد إشعارات';
+        notifList.appendChild(empty);
+        return;
+      }
+      items.forEach(it => {
+        const row = document.createElement('div');
+        row.className = 'flex items-start gap-2 p-2 rounded hover:bg-white/3';
+        // accessible summary
+        row.innerHTML = `<div class="flex-1 text-sm text-gray-100">${it.title}</div>
+                         <div class="text-xs text-gray-400">${it.time || ''}</div>`;
+        notifList.appendChild(row);
+      });
+    }
+  }
+
+  // sample: simulate incoming notifications (REMOVE in production)
+  // setTimeout(() => updateNotifications({ count: 3, items: [{title:'تعليق جديد على مقالتك', time:'قبل 5 دقائق'}, {title:'طلب اتصال', time:'قبل ساعة'}, {title:'حدث مجدول', time:'اليوم'}] }), 1200);
+
+  // Mark read button
+  if (markReadBtn) {
+    markReadBtn.addEventListener('click', () => {
+      // implement your API call to mark notifications read
+      updateNotifications({ count: 0, items: [] });
+      openNotif(false);
+    });
+  }
+
+  // keyboard shortcuts: m toggles mobile menu, / focuses search
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'm' || e.key === 'M') {
+      if (mobileToggle) mobileToggle.click();
+    }
+    if (e.key === '/') {
+      const s = document.getElementById('site-search');
+      if (s) { e.preventDefault(); s.focus(); }
+    }
+  });
+})();
+ </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js" defer></script>
 </body>
