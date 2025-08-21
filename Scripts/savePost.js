@@ -24,7 +24,7 @@ tinymce.init({
   }
 });
 
-import { supabase } from 'supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 import {getAccessToken} from './auth-guard.js';
 const SUPABASE_URL= "https://vbnnzmhopcjlkvtuubcj.supabase.co";
 

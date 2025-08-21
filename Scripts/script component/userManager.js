@@ -1,4 +1,4 @@
-import { supabase } from 'supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 
 export function initUserManager() {
   const addUserBtn = document.getElementById('addUserBtn');
