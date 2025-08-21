@@ -10,7 +10,11 @@
 
   <style>
     /* Box sizing مفيد للتعامل مع الحشو والحدود */
-    *, *::before, *::after { box-sizing: border-box; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
     :root {
       --focus-color: #ffb86b;
@@ -20,7 +24,8 @@
     }
 
     /* منع overflow-x العام لتفادي شريط أفقي غير مرغوب */
-    html, body {
+    html,
+    body {
       overflow-x: hidden;
       min-height: 100%;
       -webkit-font-smoothing: antialiased;
@@ -28,17 +33,22 @@
     }
 
     /* Make sure container sizing is consistent (optional fallback if Tailwind container varies) */
-    .container { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: 1rem; }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-inline: 1rem;
+    }
 
     /* رابط التخطي (يظهر عند التركيز فقط) */
     .skip-link {
       position: absolute;
-      /* left: -999px; */
       top: auto;
       width: 1px;
       height: 1px;
       overflow: hidden;
     }
+
     .skip-link:focus {
       left: 1rem;
       top: 1rem;
@@ -64,20 +74,29 @@
     }
 
     /* Focus-visible واضح */
-    a:focus, button:focus, input:focus {
+    a:focus,
+    button:focus,
+    input:focus {
       outline: 3px solid var(--focus-color);
       outline-offset: 2px;
     }
 
     @media (prefers-reduced-motion: reduce) {
-      * { animation-duration: 0s !important; transition-duration: 0s !important; scroll-behavior: auto !important; }
+      * {
+        animation-duration: 0s !important;
+        transition-duration: 0s !important;
+        scroll-behavior: auto !important;
+      }
     }
 
     /* تصحيح إخفاء الشريط المتحرك */
-    #sticky-bar[aria-hidden="true"] { display: none; }
+    #sticky-bar[aria-hidden="true"] {
+      display: none;
+    }
 
     /* Vanta/bg full-bleed: لا تستخدم 100vw هنا — استخدم 100% مع box-sizing */
-    #vanta-bg, .footer-wave-container {
+    #vanta-bg,
+    .footer-wave-container {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -86,13 +105,34 @@
       box-sizing: border-box;
     }
 
-    .icon-btn { transition: transform .16s ease, box-shadow .16s ease; }
-    .icon-btn:focus, .icon-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(99,102,241,0.12); }
-    .drawer-panel { transition: transform .34s cubic-bezier(.2,.9,.2,1); }
-    .backdrop-layer { transition: opacity .28s ease; }
-    .tap { padding: .5rem; border-radius: .5rem; }
+    .icon-btn {
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
 
-    .footer-wave-container { top: auto; bottom: auto; pointer-events: none; }
+    .icon-btn:focus,
+    .icon-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(99, 102, 241, 0.12);
+    }
+
+    .drawer-panel {
+      transition: transform .34s cubic-bezier(.2, .9, .2, 1);
+    }
+
+    .backdrop-layer {
+      transition: opacity .28s ease;
+    }
+
+    .tap {
+      padding: .5rem;
+      border-radius: .5rem;
+    }
+
+    .footer-wave-container {
+      top: auto;
+      bottom: auto;
+      pointer-events: none;
+    }
 
     #hero-title-visual {
       position: relative;
@@ -130,35 +170,63 @@
       font-size: clamp(1rem, 4.6vw, 2.2rem);
       margin-inline-end: 0.6rem;
       margin-bottom: 0.45rem;
-      word-break: break-word;      /* يسمح بكسر الكلمات الطويلة */
-      overflow-wrap: anywhere;     /* دعم إضافي */
+      word-break: break-word;
+      /* يسمح بكسر الكلمات الطويلة */
+      overflow-wrap: anywhere;
+      /* دعم إضافي */
       white-space: normal;
     }
 
-    .hero-word.show { opacity: 1; transform: translateY(0) scale(1); }
+    .hero-word.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
 
     @media (prefers-reduced-motion: reduce) {
-      .hero-word { transition: none; transform: none; opacity: 1; }
+      .hero-word {
+        transition: none;
+        transform: none;
+        opacity: 1;
+      }
     }
 
     /* عام: اجعل عناصر flex و grid قادرة على الانكماش حتى لا تسبب overflow */
-    .flex, .grid, .flex > *, .grid > * { min-width: 0; }
+    .flex,
+    .grid,
+    .flex>*,
+    .grid>* {
+      min-width: 0;
+    }
 
     /* بطاقات ديناميكية */
-    .post-card { min-width: 0; word-break: break-word; overflow-wrap: anywhere; }
+    .post-card {
+      min-width: 0;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
 
     /* صور/svg/iframes لا تتجاوز الحاوية */
-    img, svg, picture, iframe, video { max-width: 100%; height: auto; display: block; }
+    img,
+    svg,
+    picture,
+    iframe,
+    video {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
 
     /* Popovers / panels — لا تتجاوز عرض الشاشة */
-    #notif-pop, #mobile-menu, .drawer-panel {
+    #notif-pop,
+    #mobile-menu,
+    .drawer-panel {
       max-width: calc(95vw);
       width: auto;
       box-sizing: border-box;
     }
 
     /* ضبط موضع notif-pop ليبقى داخل الشاشة (عند RTL بعض الأحيان left:0 يسبب تجاوز) */
-    .relative > #notif-pop {
+    .relative>#notif-pop {
       left: auto;
       right: 0;
       top: calc(100% + 0.5rem);
@@ -166,17 +234,42 @@
     }
 
     /* تحسينات الفوتر */
-    .footer-identity { min-width: 0; }
-    .footer-avatar { max-width: 100%; height: auto; }
+    .footer-identity {
+      min-width: 0;
+    }
+
+    .footer-avatar {
+      max-width: 100%;
+      height: auto;
+    }
 
     /* تقليل padding/margin على الأجهزة الصغيرة */
     @media (max-width: 420px) {
-      .container { padding-left: 0.5rem; padding-right: 0.5rem; }
-      #hero-title-visual { padding-left: 0.5rem; padding-right: 0.5rem; margin-top: 0.5rem; }
-      .footer-wave-container { height: 40px; }
-      .hero-word { font-size: 1rem; margin-inline-end: 0.35rem; }
+      .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+
+      #hero-title-visual {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .footer-wave-container {
+        height: 40px;
+      }
+
+      .hero-word {
+        font-size: 1rem;
+        margin-inline-end: 0.35rem;
+      }
+
       /* اجعل بعض الأزرار والروابط تتصرف بشكل مرن */
-      #sticky-bar .container { padding-left: 0.5rem; padding-right: 0.5rem; }
+      #sticky-bar .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
     }
   </style>
 </head>
@@ -187,26 +280,43 @@
   <a href="#main-content" class="skip-link">تخطي إلى المحتوى</a>
 
   <!-- Header + Navigation -->
-  <header id="site-header" class="fixed inset-x-0 top-0 z-50 bg-black/50 backdrop-blur-md border-b border-white/6">
-    <div class="container px-4 mx-auto">
-      <div class="flex items-center justify-between h-14 md:h-16 gap-2">
-        <!-- Brand (on the right for RTL) -->
+  <header id="site-header" class="fixed inset-x-0 top-0 z-50 bg-black/60 backdrop-blur-sm border-b border-white/6">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16 gap-3">
+        <!-- Brand (right side in RTL) -->
         <div class="flex items-center gap-3 min-w-0">
           <a href="#hero-section" class="flex items-center gap-3 min-w-0" aria-label="العودة إلى الأعلى">
-            <img src="assets/picture2.webp" alt="شعار/صورة" class="w-9 h-9 rounded-full object-cover ring-2 ring-white/6" />
-            <span class="hidden md:inline-block text-white font-semibold truncate">عماد حسان</span>
+            <img src="assets/picture2.webp" alt="شعار/صورة"
+              class="w-10 h-10 rounded-xl object-cover ring-2 ring-white/6 shadow-sm" />
+            <div class="hidden sm:flex flex-col min-w-0">
+              <span class="text-sm font-semibold text-white leading-tight truncate">عماد حسان</span>
+              <span class="text-xs text-gray-400 truncate">مهندس برمجيات • مدونة شخصية</span>
+            </div>
           </a>
         </div>
 
-        <!-- Center: search (shown on md+) -->
-        <div class="hidden md:flex items-center flex-1 justify-center px-4">
-          <form role="search" class="w-full max-w-lg" onsubmit="event.preventDefault(); /* call your search handler */">
+        <!-- Center: compact search (visible md+) -->
+        <div class="hidden md:flex items-center justify-center flex-1 px-4">
+          <form role="search" class="w-full max-w-lg" onsubmit="event.preventDefault(); /* search handler */">
             <label for="site-search" class="sr-only">ابحث في الموقع</label>
-            <div class="flex items-center bg-white/6 rounded-full px-3 py-1.5 border border-white/6 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-              <span aria-hidden="true">🔎</span>
+            <div
+              class="flex items-center w-full bg-white/6 rounded-full px-3 py-2 border border-white/6 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+              <!-- search icon -->
+              <svg class="w-4 h-4 flex-none text-gray-300" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <circle cx="11" cy="11" r="5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+
               <input id="site-search" name="q" autocomplete="off"
-                     class="flex-1 bg-transparent text-sm text-gray-100 placeholder:text-gray-400 outline-none"
-                     placeholder="ابحث عن مقال أو موضوع..." />
+                class="ml-3 flex-1 bg-transparent text-sm text-gray-100 placeholder:text-gray-400 outline-none"
+                placeholder="ابحث عن مقال أو موضوع..." />
+              <button type="submit"
+                class="ml-3 hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm">
+                بحث
+              </button>
             </div>
           </form>
         </div>
@@ -215,41 +325,63 @@
         <div class="flex items-center gap-2">
           <!-- Notifications -->
           <div class="relative">
-            <button id="notif-button" aria-haspopup="true" aria-expanded="false" aria-controls="notif-pop" title="الإشعارات"
-                    class="p-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 bg-white/6">
-              🔔
+            <button id="notif-button" aria-haspopup="true" aria-expanded="false" aria-controls="notif-pop"
+              title="الإشعارات"
+              class="p-2 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 bg-white/6 hover:bg-white/8">
+              <!-- bell icon -->
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118.6 14.6V11a6 6 0 10-12 0v3.6c0 .538-.214 1.055-.595 1.442L4 17h11z"
+                  stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+
               <!-- Badge -->
-              <span id="notif-badge" class="absolute -top-1 -left-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-medium leading-none text-white bg-red-500 rounded-full transform-gpu">
+              <span id="notif-badge"
+                class="absolute -top-1 -left-1 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-medium text-white bg-red-500 rounded-full transform-gpu">
                 0
               </span>
               <span class="sr-only">عدد الإشعارات</span>
             </button>
 
-            <!-- Notifications popover -->
-            <!-- removed fixed w-80 and made it responsive via CSS above -->
+            <!-- Notifications popover (kept responsive) -->
             <div id="notif-pop" role="region" aria-live="polite" aria-label="قائمة الإشعارات"
-                 class="hidden absolute mt-2 max-h-64 overflow-auto bg-neutral-900/95 border border-white/6 rounded-md p-3 shadow-lg">
+              class="hidden absolute right-0 mt-2 w-[min(92vw,22rem)] max-h-64 overflow-auto bg-neutral-900/95 border border-white/6 rounded-lg p-3 shadow-xl">
               <div id="notif-list" class="flex flex-col gap-2">
-                <!-- إشعارات ديناميكية هنا -->
                 <div class="text-sm text-gray-400">لا توجد إشعارات</div>
               </div>
               <div class="mt-3 text-center">
-                <button id="mark-read" class="text-xs px-3 py-1 rounded-full border border-white/6">تمييز كمقروءة</button>
+                <button id="mark-read" class="text-xs px-3 py-1 rounded-full border border-white/6">تمييز
+                  كمقروءة</button>
               </div>
             </div>
           </div>
 
-          <!-- Shortcut / quick link -->
-          <a href="#posts-container" class="hidden md:inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm">المقالات</a>
+          <!-- Quick link to posts (visible md+) -->
+          <a href="#posts-container"
+            class="hidden md:inline-flex items-center px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm shadow-sm">
+            المقالات
+          </a>
 
           <!-- Theme toggle -->
-          <button id="theme-toggle" aria-pressed="false" class="p-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 bg-white/6" title="تبديل الوضع">
-            🌓
+          <button id="theme-toggle" aria-pressed="false"
+            class="p-2 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 bg-white/6 hover:bg-white/8"
+            title="تبديل الوضع">
+            <!-- moon / sun icon simple -->
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="1.4"
+                stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
           </button>
 
           <!-- Mobile hamburger -->
-          <button id="mobile-toggle" aria-controls="mobile-menu" aria-expanded="false" class="md:hidden p-2 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400" title="فتح القائمة">
-            ☰
+          <button id="mobile-toggle" aria-controls="mobile-menu" aria-expanded="false"
+            class="md:hidden p-2 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 bg-white/6 hover:bg-white/8"
+            title="فتح القائمة">
+            <!-- hamburger icon -->
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
             <span class="sr-only">فتح القائمة</span>
           </button>
         </div>
@@ -257,22 +389,43 @@
     </div>
 
     <!-- Mobile menu sheet (accessible) -->
-    <div id="mobile-menu" class="md:hidden fixed inset-x-0 top-[56px] z-40 hidden">
-      <div class="bg-black/95 backdrop-blur-md h-[calc(100vh-56px)] overflow-auto p-6">
+    <div id="mobile-menu" class="md:hidden fixed inset-x-0 top-[64px] z-40 hidden">
+      <div class="bg-black/95 backdrop-blur-lg h-[calc(100vh-64px)] overflow-auto p-6">
+        <div class="flex items-center justify-between mb-6">
+          <a href="#hero-section" class="flex items-center gap-3">
+            <img src="assets/picture2.webp" alt="" class="w-10 h-10 rounded-lg object-cover" />
+            <div>
+              <p class="text-sm font-semibold">عماد حسان</p>
+              <p class="text-xs text-gray-400">مهندس برمجيات</p>
+            </div>
+          </a>
+          <button id="mobile-close"
+            class="p-2 rounded-md bg-white/6 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            title="إغلاق القائمة">
+            <!-- X icon -->
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
+              <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+
         <nav class="flex flex-col gap-4" aria-label="القائمة الرئيسية">
-          <a href="#hero-section" class="text-lg text-white">الرئيسية</a>
-          <a href="#posts-container" class="text-lg text-white">المقالات</a>
-          <a href="#circular-posts-section" class="text-lg text-white">المواضيع</a>
-          <a href="#about" class="text-lg text-white">حول</a>
+          <a href="#hero-section" class="text-lg text-white py-2">الرئيسية</a>
+          <a href="#posts-container" class="text-lg text-white py-2">المقالات</a>
+          <a href="#circular-posts-section" class="text-lg text-white py-2">المواضيع</a>
+          <a href="#about" class="text-lg text-white py-2">حول</a>
+          <a href="#contact" class="text-lg text-white py-2">اتصل بي</a>
           <hr class="border-white/6 my-3" />
-          <button id="mobile-theme-toggle" class="text-left text-white/90">تبديل الوضع</button>
+          <button id="mobile-theme-toggle" class="text-left text-white/90 py-2">تبديل الوضع</button>
         </nav>
       </div>
     </div>
   </header>
 
   <!-- شريط ثابت -->
-  <div id="sticky-bar" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 bg-black/70 backdrop-blur-md border-b border-purple-600/20">
+  <div id="sticky-bar" aria-hidden="true"
+    class="fixed top-0 left-0 right-0 z-50 bg-black/70 backdrop-blur-md border-b border-purple-600/20">
     <div class="container mx-auto px-4 py-3">
       <div class="flex items-center justify-between">
         <div id="nav-title" class="text-white text-lg">تجوّل مساحتي</div>
@@ -281,7 +434,8 @@
           <ul class="flex gap-2 list-none m-0 p-0">
             <li><a href="#hero-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">الرئيسية</a></li>
             <li><a href="#posts-container" class="px-3 py-2 text-sm text-gray-300 focus:underline">المقالات</a></li>
-            <li><a href="#circular-posts-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">المواضيع</a></li>
+            <li><a href="#circular-posts-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">المواضيع</a>
+            </li>
           </ul>
         </nav>
       </div>
@@ -299,11 +453,13 @@
         <!-- سيتم ملؤه برمجياً -->
       </div>
 
-      <p class="relative z-10 text-gray-300 max-w-2xl mx-auto mt-4">استعرض أفكاري، مشاريعي، وتأملاتي التقنية بطريقة مرئية وتفاعلية</p>
+      <p class="relative z-10 text-gray-300 max-w-2xl mx-auto mt-4">استعرض أفكاري، مشاريعي، وتأملاتي التقنية بطريقة
+        مرئية وتفاعلية</p>
 
       <div class="relative z-10 w-full max-w-xl mt-8">
         <div class="mx-auto p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 text-center">
-          <button id="explore-button" class="text-lg text-white hover:text-indigo-400 transition" aria-controls="posts-container">
+          <button id="explore-button" class="text-lg text-white hover:text-indigo-400 transition"
+            aria-controls="posts-container">
             تجوّل مساحتي
           </button>
         </div>
@@ -311,7 +467,8 @@
     </section>
 
     <!-- قسم المقالات -->
-    <section id="circular-posts-section" class="relative w-full bg-gradient-to-b from-black to-indigo-950 py-16" aria-labelledby="posts-heading">
+    <section id="circular-posts-section" class="relative w-full bg-gradient-to-b from-black to-indigo-950 py-16"
+      aria-labelledby="posts-heading">
       <div class="container mx-auto px-4">
         <div id="posts-container" class="relative z-10 max-w-5xl mx-auto">
           <header class="text-center mb-8">
@@ -320,35 +477,47 @@
           </header>
 
           <div class="flex justify-center mb-6" role="tablist" aria-label="فئات المقالات">
-            <button role="tab" aria-selected="true" class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white focus:outline-none" data-category="all">الكل</button>
-            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none" data-category="tech">تقنية</button>
-            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none" data-category="personal">شخصي</button>
-            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none" data-category="prog">مشاريع</button>
+            <button role="tab" aria-selected="true"
+              class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white focus:outline-none"
+              data-category="all">الكل</button>
+            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none"
+              data-category="tech">تقنية</button>
+            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none"
+              data-category="personal">شخصي</button>
+            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none"
+              data-category="prog">مشاريع</button>
           </div>
 
           <!-- مقال مميز -->
-          <article id="featured-post" class="bg-gradient-to-br from-gray-900 to-indigo-950/90 backdrop-blur-lg rounded-xl p-6 mb-8 border border-purple-500/50" aria-labelledby="featured-title">
+          <article id="featured-post"
+            class="bg-gradient-to-br from-gray-900 to-indigo-950/90 backdrop-blur-lg rounded-xl p-6 mb-8 border border-purple-500/50"
+            aria-labelledby="featured-title">
             <div class="mb-2">
               <span class="bg-purple-600/80 text-white text-xs px-3 py-1 rounded-full inline-block">مقال مميز</span>
             </div>
             <h3 id="featured-title" class="text-xl md:text-2xl font-bold">عنوان المقال المميز</h3>
-            <p id="featured-excerpt" class="text-gray-300 mt-3">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة...</p>
+            <p id="featured-excerpt" class="text-gray-300 mt-3">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة...
+            </p>
 
             <div class="flex items-center justify-between mt-4 flex-minfix">
               <span id="featured-date" class="text-xs text-purple-300">منذ 3 أيام</span>
               <div class="flex gap-2">
-                <button id="featured-read-more" class="px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white" aria-label="قراءة المزيد عن المقال المميز">قراءة المزيد</button>
+                <button id="featured-read-more"
+                  class="px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
+                  aria-label="قراءة المزيد عن المقال المميز">قراءة المزيد</button>
               </div>
             </div>
           </article>
 
           <!-- شبكة المشاركات: البطاقات تُدرج ديناميكيًا -->
-          <section id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" aria-live="polite" aria-label="قائمة المقالات">
+          <section id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" aria-live="polite"
+            aria-label="قائمة المقالات">
             <!-- بطاقاتك الديناميكية ستُدرَج هنا (كل بطاقة يجب أن تحمل class="post-card") -->
           </section>
 
           <div class="text-center mt-8">
-            <button id="load-more" class="px-6 py-2 rounded-full border border-purple-500/30" aria-controls="posts-grid">تحميل المزيد</button>
+            <button id="load-more" class="px-6 py-2 rounded-full border border-purple-500/30"
+              aria-controls="posts-grid">تحميل المزيد</button>
           </div>
         </div>
       </div>
@@ -356,8 +525,10 @@
 
   </main>
 
-  <footer role="contentinfo" class="relative bg-gradient-to-t from-black/90 via-neutral-900 to-transparent pt-10" aria-label="تذييل الصفحة">
-    <div class="footer-wave-container pointer-events-none absolute inset-x-0 -top-6 overflow-hidden leading-none" style="height:50px;">
+  <footer role="contentinfo" class="relative bg-gradient-to-t from-black/90 via-neutral-900 to-transparent pt-10"
+    aria-label="تذييل الصفحة">
+    <div class="footer-wave-container pointer-events-none absolute inset-x-0 -top-6 overflow-hidden leading-none"
+      style="height:50px;">
       <svg class="relative block w-full h-full" viewBox="0 0 1200 50" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0,30 C150,70 350,0 600,30 C850,60 1050,10 1200,30 L1200,50 L0,50 Z" fill="#0b1220"></path>
       </svg>
@@ -367,12 +538,15 @@
       <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 flex-minfix">
         <div class="flex items-center gap-4 md:gap-6 footer-identity">
           <div class="relative">
-            <img src="assets/picture2.webp" alt="صورة عماد حسان" class="w-24 h-24 md:w-28 md:h-28 rounded-full ring-4 ring-black/60 shadow-lg object-cover footer-avatar" loading="lazy"/>
+            <img src="assets/picture2.webp" alt="صورة عماد حسان"
+              class="w-24 h-24 md:w-28 md:h-28 rounded-full ring-4 ring-black/60 shadow-lg object-cover footer-avatar"
+              loading="lazy" />
           </div>
 
           <div class="min-w-0">
             <p class="text-lg font-semibold truncate">عماد حسان</p>
-            <p class="text-sm text-gray-300 max-w-xs truncate">مساحة تجريبية لعرض مشاريعي وأفكاري — تصميم مبسّط، تجربة مركّزة، واهتمام بالوصول.</p>
+            <p class="text-sm text-gray-300 max-w-xs truncate">مساحة تجريبية لعرض مشاريعي وأفكاري — تصميم مبسّط، تجربة
+              مركّزة، واهتمام بالوصول.</p>
           </div>
         </div>
 
@@ -382,7 +556,8 @@
             <ul class="space-y-2">
               <li><a href="#hero-section" class="text-gray-300 hover:text-white focus:underline">الرئيسية</a></li>
               <li><a href="#posts-container" class="text-gray-300 hover:text-white focus:underline">المقالات</a></li>
-              <li><a href="#circular-posts-section" class="text-gray-300 hover:text-white focus:underline">المواضيع</a></li>
+              <li><a href="#circular-posts-section" class="text-gray-300 hover:text-white focus:underline">المواضيع</a>
+              </li>
             </ul>
           </div>
 
@@ -407,11 +582,13 @@
       </div>
 
       <div class="mt-8 pt-6 border-t border-white/6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <p class="text-sm text-gray-400">© <span id="footer-year"></span> — مساحتي الشخصية — "حيث تتقاطع الأفكار مع التنفيذ"</p>
+        <p class="text-sm text-gray-400">© <span id="footer-year"></span> — مساحتي الشخصية — "حيث تتقاطع الأفكار مع
+          التنفيذ"</p>
         <div class="flex items-center gap-4">
           <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline">شروط الاستخدام</a>
           <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline">خريطة الموقع</a>
-          <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline" title="تم التطوير بواسطة عماد حسان">تطوير: عماد</a>
+          <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline"
+            title="تم التطوير بواسطة عماد حسان">تطوير: عماد</a>
         </div>
       </div>
     </div>
@@ -493,7 +670,7 @@
       return true;
     }
     function destroyVanta() {
-      try { if (window._vanta_instance && typeof window._vanta_instance.destroy === 'function') window._vanta_instance.destroy(); } catch (e) {}
+      try { if (window._vanta_instance && typeof window._vanta_instance.destroy === 'function') window._vanta_instance.destroy(); } catch (e) { }
       window._vanta_instance = null;
       window._vanta_running = false;
     }
@@ -671,7 +848,7 @@
           notifPop.classList.remove('hidden');
           notifBtn.setAttribute('aria-expanded', 'true');
           // focus first notification or pop container
-          setTimeout(()=> {
+          setTimeout(() => {
             const first = notifPop.querySelector('a, button, [tabindex]');
             if (first) first.focus();
           }, 50);
@@ -753,6 +930,180 @@
       });
     })();
   </script>
+  <script>
+    (function () {
+      // عناصر ممكن أن توجد بعد إعادة تصميم الرأس — ندعم كلا المعرفين حفاظًا على التوافق
+      const toggleIds = ['mobile-toggle', 'mobile-nav-toggle'];
+      const toggles = toggleIds.map(id => document.getElementById(id)).filter(Boolean);
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileClose = document.getElementById('mobile-close');
+      const mainContent = document.getElementById('main-content') || document.querySelector('main');
+
+      if (!mobileMenu || toggles.length === 0) {
+        // لا شيء للتهيئة إن لم تكن العناصر موجودة — هذا يمنع الأخطاء في البيئات المختلفة
+        return;
+      }
+
+      // Utilities
+      const focusableSelector = 'a[href], button:not([disabled]), textarea, input:not([type="hidden"]):not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      function getFocusable(container) {
+        return Array.from(container.querySelectorAll(focusableSelector)).filter(el => el.offsetParent !== null);
+      }
+      let lastFocusedElement = null;
+      let trapEnabled = false;
+
+      function isOpen() {
+        return !mobileMenu.classList.contains('hidden') && mobileMenu.classList.contains('block');
+      }
+
+      function openMenu() {
+        // Set visible classes (idempotent)
+        mobileMenu.classList.remove('hidden');
+        mobileMenu.classList.add('block');
+        toggles.forEach(t => t.setAttribute('aria-expanded', 'true'));
+
+        // Accessibility states
+        mobileMenu.setAttribute('aria-modal', 'true');
+        if (mainContent) mainContent.setAttribute('aria-hidden', 'true');
+
+        // Lock scroll
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+
+        // Save last focused element to restore later
+        lastFocusedElement = document.activeElement;
+
+        // Focus first interactive element inside menu
+        const focusables = getFocusable(mobileMenu);
+        if (focusables.length) {
+          focusables[0].focus();
+        } else {
+          // إذا لم توجد عناصر قابلة للتركيز، ضع التركيز على نفسه
+          mobileMenu.focus();
+        }
+
+        // Enable focus trap
+        trapEnabled = true;
+      }
+
+      function closeMenu() {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('block');
+        toggles.forEach(t => t.setAttribute('aria-expanded', 'false'));
+
+        // Accessibility states
+        mobileMenu.removeAttribute('aria-modal');
+        if (mainContent) mainContent.removeAttribute('aria-hidden');
+
+        // Unlock scroll
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+
+        // Restore focus
+        try { if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') lastFocusedElement.focus(); } catch (e) { /* ignore */ }
+        lastFocusedElement = null;
+        trapEnabled = false;
+      }
+
+      // Toggle handler (keeps behaviour consistent even إن وُجدت أحداث أخرى)
+      function toggleHandler(e) {
+        e && e.preventDefault && e.preventDefault();
+        if (isOpen()) closeMenu(); else openMenu();
+      }
+
+      // Attach click listeners to all possible toggles (idempotent)
+      toggles.forEach(t => {
+        // remove any inline duplicate handler? we won't remove existing handlers; just add ours
+        t.addEventListener('click', toggleHandler);
+      });
+
+      // mobile-close (زر X داخل القائمة)
+      if (mobileClose) {
+        mobileClose.addEventListener('click', (e) => {
+          e.preventDefault();
+          closeMenu();
+        });
+      }
+
+      // Close when clicking a navigation link inside mobile menu (good UX)
+      mobileMenu.addEventListener('click', (e) => {
+        const a = e.target.closest('a[href]');
+        if (a && a.getAttribute('href') && a.getAttribute('href').startsWith('#')) {
+          // allow the browser to handle the anchor then close shortly after
+          setTimeout(closeMenu, 120);
+        }
+      });
+
+      // Click outside to close (only when menu open)
+      document.addEventListener('click', (e) => {
+        if (!isOpen()) return;
+        // if click outside mobileMenu and not on any toggle button -> close
+        const clickedInside = mobileMenu.contains(e.target);
+        const clickedToggle = toggles.some(t => t.contains(e.target) || t === e.target);
+        if (!clickedInside && !clickedToggle) closeMenu();
+      });
+
+      // Escape key closes menu (and notif pop handled elsewhere but this is safe)
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+          if (isOpen()) {
+            e.preventDefault();
+            closeMenu();
+          }
+        }
+
+        // Simple focus trap inside menu while open
+        if (!trapEnabled || !isOpen()) return;
+        if (e.key === 'Tab') {
+          const focusables = getFocusable(mobileMenu);
+          if (!focusables.length) {
+            // no focusable items: prevent tabbing out
+            e.preventDefault();
+            return;
+          }
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          const active = document.activeElement;
+
+          if (e.shiftKey) {
+            // Shift + Tab
+            if (active === first || mobileMenu === active) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            // Tab
+            if (active === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
+      });
+
+      // Robustness: ensure initial ARIA state on load
+      try {
+        toggles.forEach(t => {
+          if (!t.hasAttribute('aria-expanded')) t.setAttribute('aria-expanded', String(isOpen()));
+        });
+        if (mobileMenu) {
+          if (!mobileMenu.classList.contains('hidden') && !mobileMenu.classList.contains('block')) {
+            // if neither class present, default to hidden
+            mobileMenu.classList.add('hidden');
+          }
+        }
+      } catch (e) { /* ignore */ }
+
+      // optional: expose for debugging (window._mobileMenuControl.openMenu etc.)
+      window._mobileMenuControl = {
+        open: openMenu,
+        close: closeMenu,
+        toggle: () => { isOpen() ? closeMenu() : openMenu(); },
+        isOpen
+      };
+    })();
+  </script>
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js" defer></script>
