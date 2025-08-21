@@ -113,7 +113,7 @@ const Renderer = (() => {
     authorNameEl: document.getElementById('post-author'),
     authorAvatarEl: document.getElementById('post-author-avatar'),
     contentEl: document.getElementById('post-content'),
-    postIdMeta: document.getElementById('post-id-meta'),
+    // postIdMeta: document.getElementById('post-id-meta'),
     categoryEl: document.getElementById('post-category'),
     loadingSkeleton: null, // reserved if you want to show/hide
   };
@@ -158,7 +158,7 @@ const Renderer = (() => {
       refs.timeEl.setAttribute('datetime', post.created_at || '');
     }
     if (refs.readtimeEl) refs.readtimeEl.textContent = `⏱ ${post.read_time || '5'} دقائق`;
-    if (refs.postIdMeta) refs.postIdMeta.textContent = post.id || '';
+    // if (refs.postIdMeta) refs.postIdMeta.textContent = post.id || '';
     if (refs.authorNameEl) refs.authorNameEl.textContent = profile?.full_name || (post.author_id || 'محرر') || 'محرر';
     if (refs.authorAvatarEl) {
       const src = profile?.avatar_url || post.author_avatar || `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(profile?.id || post.author_id || 'author')}`;
