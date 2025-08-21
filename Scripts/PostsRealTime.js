@@ -1,4 +1,4 @@
-import { supabase } from 'supabaseClient.js'
+import { supabase } from './supabaseClient.js'
 const circularGrid = document.getElementById('circular-grid')
 
 // إنشاء بطاقة مقالة (نفس التصميم السابق)

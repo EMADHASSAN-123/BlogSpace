@@ -1,4 +1,4 @@
-import { supabase } from 'supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 
 const functionsBase = "https://vbnnzmhopcjlkvtuubcj.supabase.co/functions/v1";
 

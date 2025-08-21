@@ -1,6 +1,6 @@
 // /Scripts/ScriptsPost/post-page.js  (refactored)
 // مسؤوليات مفصّلة: CacheService, PostService, Renderer, Controller
-import { getQueryParam, timeAgo, setSiteYear } from 'utils.js';
+import { getQueryParam, timeAgo, setSiteYear } from './utils.js';
 import { supabase } from '../supabaseClient.js';
 
 // ------ إعدادات ------

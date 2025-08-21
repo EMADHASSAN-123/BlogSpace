@@ -1,4 +1,4 @@
-import { supabase } from 'supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 import { StatusCodes } from 'http-status-codes';
 
 

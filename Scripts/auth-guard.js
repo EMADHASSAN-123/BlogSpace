@@ -1,4 +1,4 @@
-import { supabase } from 'supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 
 export async function protectPage() {
   const { data: { session } } = await supabase.auth.getSession();

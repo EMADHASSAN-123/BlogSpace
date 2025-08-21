@@ -1,5 +1,5 @@
 
-import { supabase } from 'supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 
 const postsContainer = document.getElementById('postsContainer');
 const searchInput = document.getElementById('searchInput');

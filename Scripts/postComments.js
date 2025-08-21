@@ -1,4 +1,4 @@
-import { supabase } from 'supabaseClient.js';
+import { supabase } from './supabaseClient.js';
 
 // Handles comments on post page
 const commentInput = document.getElementById('comment-input');
