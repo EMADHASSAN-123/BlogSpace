@@ -33,7 +33,7 @@
     /* رابط التخطي (يظهر عند التركيز فقط) */
     .skip-link {
       position: absolute;
-      left: -999px;
+      /* left: -999px; */
       top: auto;
       width: 1px;
       height: 1px;
@@ -187,10 +187,106 @@
   <a href="#main-content" class="skip-link">تخطي إلى المحتوى</a>
 
   <!-- Header + Navigation -->
-  
+  <header id="site-header" class="fixed inset-x-0 top-0 z-50 bg-black/50 backdrop-blur-md border-b border-white/6">
+    <div class="container px-4 mx-auto">
+      <div class="flex items-center justify-between h-14 md:h-16 gap-2">
+        <!-- Brand (on the right for RTL) -->
+        <div class="flex items-center gap-3 min-w-0">
+          <a href="#hero-section" class="flex items-center gap-3 min-w-0" aria-label="العودة إلى الأعلى">
+            <img src="assets/picture2.webp" alt="شعار/صورة" class="w-9 h-9 rounded-full object-cover ring-2 ring-white/6" />
+            <span class="hidden md:inline-block text-white font-semibold truncate">عماد حسان</span>
+          </a>
+        </div>
+
+        <!-- Center: search (shown on md+) -->
+        <div class="hidden md:flex items-center flex-1 justify-center px-4">
+          <form role="search" class="w-full max-w-lg" onsubmit="event.preventDefault(); /* call your search handler */">
+            <label for="site-search" class="sr-only">ابحث في الموقع</label>
+            <div class="flex items-center bg-white/6 rounded-full px-3 py-1.5 border border-white/6 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+              <span aria-hidden="true">🔎</span>
+              <input id="site-search" name="q" autocomplete="off"
+                     class="flex-1 bg-transparent text-sm text-gray-100 placeholder:text-gray-400 outline-none"
+                     placeholder="ابحث عن مقال أو موضوع..." />
+            </div>
+          </form>
+        </div>
+
+        <!-- Actions (left in RTL) -->
+        <div class="flex items-center gap-2">
+          <!-- Notifications -->
+          <div class="relative">
+            <button id="notif-button" aria-haspopup="true" aria-expanded="false" aria-controls="notif-pop" title="الإشعارات"
+                    class="p-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 bg-white/6">
+              🔔
+              <!-- Badge -->
+              <span id="notif-badge" class="absolute -top-1 -left-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-medium leading-none text-white bg-red-500 rounded-full transform-gpu">
+                0
+              </span>
+              <span class="sr-only">عدد الإشعارات</span>
+            </button>
+
+            <!-- Notifications popover -->
+            <!-- removed fixed w-80 and made it responsive via CSS above -->
+            <div id="notif-pop" role="region" aria-live="polite" aria-label="قائمة الإشعارات"
+                 class="hidden absolute mt-2 max-h-64 overflow-auto bg-neutral-900/95 border border-white/6 rounded-md p-3 shadow-lg">
+              <div id="notif-list" class="flex flex-col gap-2">
+                <!-- إشعارات ديناميكية هنا -->
+                <div class="text-sm text-gray-400">لا توجد إشعارات</div>
+              </div>
+              <div class="mt-3 text-center">
+                <button id="mark-read" class="text-xs px-3 py-1 rounded-full border border-white/6">تمييز كمقروءة</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shortcut / quick link -->
+          <a href="#posts-container" class="hidden md:inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm">المقالات</a>
+
+          <!-- Theme toggle -->
+          <button id="theme-toggle" aria-pressed="false" class="p-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 bg-white/6" title="تبديل الوضع">
+            🌓
+          </button>
+
+          <!-- Mobile hamburger -->
+          <button id="mobile-toggle" aria-controls="mobile-menu" aria-expanded="false" class="md:hidden p-2 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400" title="فتح القائمة">
+            ☰
+            <span class="sr-only">فتح القائمة</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile menu sheet (accessible) -->
+    <div id="mobile-menu" class="md:hidden fixed inset-x-0 top-[56px] z-40 hidden">
+      <div class="bg-black/95 backdrop-blur-md h-[calc(100vh-56px)] overflow-auto p-6">
+        <nav class="flex flex-col gap-4" aria-label="القائمة الرئيسية">
+          <a href="#hero-section" class="text-lg text-white">الرئيسية</a>
+          <a href="#posts-container" class="text-lg text-white">المقالات</a>
+          <a href="#circular-posts-section" class="text-lg text-white">المواضيع</a>
+          <a href="#about" class="text-lg text-white">حول</a>
+          <hr class="border-white/6 my-3" />
+          <button id="mobile-theme-toggle" class="text-left text-white/90">تبديل الوضع</button>
+        </nav>
+      </div>
+    </div>
+  </header>
 
   <!-- شريط ثابت -->
- 
+  <div id="sticky-bar" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 bg-black/70 backdrop-blur-md border-b border-purple-600/20">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div id="nav-title" class="text-white text-lg">تجوّل مساحتي</div>
+
+        <nav role="navigation" aria-label="روابط سريعة">
+          <ul class="flex gap-2 list-none m-0 p-0">
+            <li><a href="#hero-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">الرئيسية</a></li>
+            <li><a href="#posts-container" class="px-3 py-2 text-sm text-gray-300 focus:underline">المقالات</a></li>
+            <li><a href="#circular-posts-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">المواضيع</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
 
   <main id="main-content" role="main" class="relative">
 
