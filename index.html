@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -9,92 +10,135 @@
 
   <style>
     /* Helpers */
-    :root{
+    :root {
       --focus-color: #ffb86b;
       --primary: #6c63ff;
-       --vanta-accent-hex: #8B5CF6;   /* electric purple */
+      --vanta-accent-hex: #8B5CF6;
+      /* electric purple */
       --vanta-bg-hex: #071025;
-    } 
-    body{
+    }
+
+    body {
       overflow-x: hidden;
     }
 
     /* رابط التخطي (يظهر عند التركيز فقط) */
-    .skip-link{
-      position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden;
-    }
-    .skip-link:focus{
-      left:1rem;top:1rem;width:auto;height:auto;padding:0.5rem 1rem;background:var(--primary);color:#fff;border-radius:6px;z-index:9999;
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
     }
 
-    .visually-hidden{
-      position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap;border:0;padding:0;margin:-1px;
+    .skip-link:focus {
+      left: 1rem;
+      top: 1rem;
+      width: auto;
+      height: auto;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 6px;
+      z-index: 9999;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      height: 1px;
+      width: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+      white-space: nowrap;
+      border: 0;
+      padding: 0;
+      margin: -1px;
     }
 
     /* Focus-visible واضح */
-    a:focus, button:focus, input:focus {
+    a:focus,
+    button:focus,
+    input:focus {
       outline: 3px solid var(--focus-color);
       outline-offset: 2px;
     }
 
     /* Reduced motion support */
-    @media (prefers-reduced-motion: reduce){
-      *{animation-duration:0s!important;transition-duration:0s!important;scroll-behavior:auto!important;}
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0s !important;
+        transition-duration: 0s !important;
+        scroll-behavior: auto !important;
+      }
     }
 
     /* تصحيحات بسيطة للهيكل المتحرك */
-    #sticky-bar[aria-hidden="true"]{ display:none; }
+    #sticky-bar[aria-hidden="true"] {
+      display: none;
+    }
 
     #hero-title-visual {
-    position: relative;
-    z-index: 12;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 160px;
-    padding: 0 1rem;
-    text-align: center;
-    pointer-events: none; /* منع التداخل مع الفأرة */
-  }
+      position: relative;
+      z-index: 12;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 160px;
+      padding: 0 1rem;
+      text-align: center;
+      pointer-events: none;
+      /* منع التداخل مع الفأرة */
+    }
 
-  /* صندوق النص في الوسط (الذي يحتوي على الكلمات) */
-   .hero-center {
-    pointer-events: auto;
-    display: inline-block;         /* يسمح بالالتفاف الطبيعي للكلمات */
-    max-width: 92%;
-    line-height: 1.6;              /* تباعد بين السطور لتحسين القابلية للقراءة */
-    text-align: center;
-  }
+    /* صندوق النص في الوسط (الذي يحتوي على الكلمات) */
+    .hero-center {
+      pointer-events: auto;
+      display: inline-block;
+      /* يسمح بالالتفاف الطبيعي للكلمات */
+      max-width: 92%;
+      line-height: 1.6;
+      /* تباعد بين السطور لتحسين القابلية للقراءة */
+      text-align: center;
+    }
 
 
-  /* كل كلمة تظهر كعنصر منفصل لتمكين التأخيرات */
-  .hero-word {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(18px) scale(0.98);
-    transition: transform 420ms cubic-bezier(.22,.9,.35,1), opacity 420ms ease;
-    will-change: transform, opacity;
-    color: #ffffff;
-    font-weight: 700;
-    text-shadow: 0 8px 30px rgba(7,6,20,0.6);
-    font-size: clamp(1.1rem, 4.6vw, 2.2rem); /* متجاوب */
-    margin-inline-end: 0.6rem;     /* مسافة أفقية بين الكلمات (يحترم RTL/LTR) */
-    margin-bottom: 0.45rem;        /* مسافة رأسية بين الأسطر عند الالتفاف */
-    word-break: keep-all;          /* نحاول إبقاء الكلمات غير مقطوعة */
-  }
+    /* كل كلمة تظهر كعنصر منفصل لتمكين التأخيرات */
+    .hero-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(18px) scale(0.98);
+      transition: transform 420ms cubic-bezier(.22, .9, .35, 1), opacity 420ms ease;
+      will-change: transform, opacity;
+      color: #ffffff;
+      font-weight: 700;
+      text-shadow: 0 8px 30px rgba(7, 6, 20, 0.6);
+      font-size: clamp(1.1rem, 4.6vw, 2.2rem);
+      /* متجاوب */
+      margin-inline-end: 0.6rem;
+      /* مسافة أفقية بين الكلمات (يحترم RTL/LTR) */
+      margin-bottom: 0.45rem;
+      /* مسافة رأسية بين الأسطر عند الالتفاف */
+      word-break: keep-all;
+      /* نحاول إبقاء الكلمات غير مقطوعة */
+    }
 
-  .hero-word.show {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+    .hero-word.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
 
-  /* سطر الوصف تحت العبارة */
- 
+    /* سطر الوصف تحت العبارة */
 
-  /* أن يقلل الحركة للأجهزة التي تطلب ذلك */
-  @media (prefers-reduced-motion: reduce) {
-    .hero-word { transition: none; transform: none; opacity: 1; }
-  }
+
+    /* أن يقلل الحركة للأجهزة التي تطلب ذلك */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-word {
+        transition: none;
+        transform: none;
+        opacity: 1;
+      }
+    }
   </style>
 </head>
 
@@ -121,14 +165,17 @@
 
       <!-- أدوات سريعة: تبديل الثيم، إيقاف الخلفية -->
       <div class="flex items-center gap-2">
-        <button id="darkModeToggle" class="px-3 py-2 rounded" aria-pressed="false" aria-label="تبديل الوضع الداكن">🌙</button>
-        <button id="toggle-vanta" class="px-3 py-2 rounded" aria-pressed="false" aria-label="إيقاف/تشغيل تأثير الخلفية">⏯️</button>
+        <button id="darkModeToggle" class="px-3 py-2 rounded" aria-pressed="false"
+          aria-label="تبديل الوضع الداكن">🌙</button>
+        <button id="toggle-vanta" class="px-3 py-2 rounded" aria-pressed="false"
+          aria-label="إيقاف/تشغيل تأثير الخلفية">⏯️</button>
       </div>
     </div>
   </header>
 
   <!-- شريط ثابت يظهر عند التمرير؛ إدارة aria-hidden عند الإخفاء -->
-  <div id="sticky-bar" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 bg-black/70 backdrop-blur-md border-b border-purple-600/20">
+  <div id="sticky-bar" aria-hidden="true"
+    class="fixed top-0 left-0 right-0 z-50 bg-black/70 backdrop-blur-md border-b border-purple-600/20">
     <div class="container mx-auto px-4 py-3">
       <div class="flex items-center justify-between">
         <div id="nav-title" class="text-white text-lg">تجوّل مساحتي</div>
@@ -137,7 +184,8 @@
           <ul class="flex gap-2 list-none m-0 p-0">
             <li><a href="#hero-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">الرئيسية</a></li>
             <li><a href="#posts-container" class="px-3 py-2 text-sm text-gray-300 focus:underline">المقالات</a></li>
-            <li><a href="#circular-posts-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">المواضيع</a></li>
+            <li><a href="#circular-posts-section" class="px-3 py-2 text-sm text-gray-300 focus:underline">المواضيع</a>
+            </li>
           </ul>
         </nav>
       </div>
@@ -159,11 +207,13 @@
         <!-- الحروف تُدرج برمجياً كما في كودك الأصلي -->
       </div>
 
-      <p class="relative z-10 text-gray-300 max-w-2xl mx-auto mt-4">استعرض أفكاري، مشاريعي، وتأملاتي التقنية بطريقة مرئية وتفاعلية</p>
+      <p class="relative z-10 text-gray-300 max-w-2xl mx-auto mt-4">استعرض أفكاري، مشاريعي، وتأملاتي التقنية بطريقة
+        مرئية وتفاعلية</p>
 
       <div class="relative z-10 w-full max-w-xl mt-8">
         <div class="mx-auto p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 text-center">
-          <button id="explore-button" class="text-lg text-white hover:text-indigo-400 transition" aria-controls="posts-container">
+          <button id="explore-button" class="text-lg text-white hover:text-indigo-400 transition"
+            aria-controls="posts-container">
             تجوّل مساحتي
           </button>
         </div>
@@ -171,7 +221,8 @@
     </section>
 
     <!-- قسم المقالات (مهيكل) -->
-    <section id="circular-posts-section" class="relative w-full bg-gradient-to-b from-black to-indigo-950 py-16" aria-labelledby="posts-heading">
+    <section id="circular-posts-section" class="relative w-full bg-gradient-to-b from-black to-indigo-950 py-16"
+      aria-labelledby="posts-heading">
       <div class="container mx-auto px-4">
         <div id="posts-container" class="relative z-10 max-w-5xl mx-auto">
           <header class="text-center mb-8">
@@ -181,35 +232,47 @@
 
           <!-- أزرار فلترة بترتيب دلالي -->
           <div class="flex justify-center mb-6" role="tablist" aria-label="فئات المقالات">
-            <button role="tab" aria-selected="true" class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white focus:outline-none" data-category="all">الكل</button>
-            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none" data-category="tech">تقنية</button>
-            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none" data-category="personal">شخصي</button>
-            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none" data-category="prog">مشاريع</button>
+            <button role="tab" aria-selected="true"
+              class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white focus:outline-none"
+              data-category="all">الكل</button>
+            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none"
+              data-category="tech">تقنية</button>
+            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none"
+              data-category="personal">شخصي</button>
+            <button role="tab" aria-selected="false" class="px-4 py-2 rounded-full text-purple-300 focus:outline-none"
+              data-category="prog">مشاريع</button>
           </div>
 
           <!-- مقال مميز -->
-          <article id="featured-post" class="bg-gradient-to-br from-gray-900 to-indigo-950/90 backdrop-blur-lg rounded-xl p-6 mb-8 border border-purple-500/50" aria-labelledby="featured-title">
+          <article id="featured-post"
+            class="bg-gradient-to-br from-gray-900 to-indigo-950/90 backdrop-blur-lg rounded-xl p-6 mb-8 border border-purple-500/50"
+            aria-labelledby="featured-title">
             <div class="mb-2">
               <span class="bg-purple-600/80 text-white text-xs px-3 py-1 rounded-full inline-block">مقال مميز</span>
             </div>
             <h3 id="featured-title" class="text-xl md:text-2xl font-bold">عنوان المقال المميز</h3>
-            <p id="featured-excerpt" class="text-gray-300 mt-3">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة...</p>
+            <p id="featured-excerpt" class="text-gray-300 mt-3">هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة...
+            </p>
 
             <div class="flex items-center justify-between mt-4">
               <span id="featured-date" class="text-xs text-purple-300">منذ 3 أيام</span>
               <div class="flex gap-2">
-                <button id="featured-read-more" class="px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white" aria-label="قراءة المزيد عن المقال المميز">قراءة المزيد</button>
+                <button id="featured-read-more"
+                  class="px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
+                  aria-label="قراءة المزيد عن المقال المميز">قراءة المزيد</button>
               </div>
             </div>
           </article>
 
           <!-- شبكة المشاركات: تعطي تنبيهًا للمستخدمين عند إضافة محتوى جديد -->
-          <section id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" aria-live="polite" aria-label="قائمة المقالات">
+          <section id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" aria-live="polite"
+            aria-label="قائمة المقالات">
             <!-- بطاقات المشاركات تُدرج ديناميكيًا هنا -->
           </section>
 
           <div class="text-center mt-8">
-            <button id="load-more" class="px-6 py-2 rounded-full border border-purple-500/30" aria-controls="posts-grid">تحميل المزيد</button>
+            <button id="load-more" class="px-6 py-2 rounded-full border border-purple-500/30"
+              aria-controls="posts-grid">تحميل المزيد</button>
           </div>
         </div>
       </div>
@@ -220,26 +283,29 @@
   </main>
 
   <!-- Footer دلالي -->
-  <footer role="contentinfo" class="relative bg-gradient-to-t from-black/90 via-neutral-900 to-transparent pt-10" aria-label="تذييل الصفحة">
-    <!-- موجة فنية تفصل المحتوى -->
-    <div class="pointer-events-none absolute inset-x-0 -top-6 overflow-hidden leading-none">
-      <svg class="relative block w-full h-6" viewBox="0 0 1200 50" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,30 C150,70 350,0 600,30 C850,60 1050,10 1200,30 L1200,50 L0,50 Z" fill="#0b1220"></path>
-      </svg>
-    </div>
+  <footer role="contentinfo" class="relative bg-gradient-to-t from-black/90 via-neutral-900 to-transparent pt-10"
+    aria-label="تذييل الصفحة">
+     
+    <div class="footer-wave-container pointer-events-none absolute inset-x-0 -top-6 overflow-hidden leading-none" style="height:50px;">
+    <svg class="relative block w-full h-full" viewBox="0 0 1200 50" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,30 C150,70 350,0 600,30 C850,60 1050,10 1200,30 L1200,50 L0,50 Z" fill="#0b1220"></path>
+    </svg>
+  </div>
 
     <div class="container mx-auto px-6 pb-10">
       <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
         <!-- منطقة الهوية -->
         <div class="flex items-center gap-4 md:gap-6" style="min-width:260px;">
           <div class="relative ">
-            <img src="assets/picture2.webp" alt="صورة عماد حسان" class="w-28 h-20 md:w-30 md:h-28 rounded-full ring-4 ring-black/60 shadow-lg object-cover" />
+            <img src="assets/picture2.webp" alt="صورة عماد حسان" 
+              class="w-28 h-20 md:w-30 md:h-28 rounded-full ring-4 ring-black/60 shadow-lg object-cover" loading="lazy"/>
             <!-- <span class="absolute  -left-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-xs text-white px-2 py-0.5 rounded-full shadow-sm">  تطوير وتصميم  </span> -->
           </div>
 
           <div>
             <p class="text-lg font-semibold">عماد حسان</p>
-            <p class="text-sm text-gray-300 max-w-xs">مساحة تجريبية لعرض مشاريعي وأفكاري — تصميم مبسّط، تجربة مركّزة، واهتمام بالوصول.</p>
+            <p class="text-sm text-gray-300 max-w-xs">مساحة تجريبية لعرض مشاريعي وأفكاري — تصميم مبسّط، تجربة مركّزة،
+              واهتمام بالوصول.</p>
           </div>
         </div>
 
@@ -250,7 +316,8 @@
             <ul class="space-y-2">
               <li><a href="#hero-section" class="text-gray-300 hover:text-white focus:underline">الرئيسية</a></li>
               <li><a href="#posts-container" class="text-gray-300 hover:text-white focus:underline">المقالات</a></li>
-              <li><a href="#circular-posts-section" class="text-gray-300 hover:text-white focus:underline">المواضيع</a></li>
+              <li><a href="#circular-posts-section" class="text-gray-300 hover:text-white focus:underline">المواضيع</a>
+              </li>
             </ul>
           </div>
 
@@ -268,8 +335,8 @@
           <!-- مساحات جاهزة للتوسعة (أيقونات التواصل أزلتها كما طلبت) -->
           <div class="flex items-center gap-3">
             <div class="text-right">
-              <p class="text-sm font-medium">تواصل معي</p>
-              <p class="text-xs text-gray-400">سأرد خلال 24 ساعة عادةً</p>
+              <p class="text-sm font-medium">  افكار اضافية </p>
+              <p class="text-xs text-gray-400"> اذا لديك افكار اضافية او لاحظت اشياء لم تتضح لك اخبرني بها  </p>
             </div>
           </div>
         </div>
@@ -277,24 +344,27 @@
 
       <!-- سطر سفلي -->
       <div class="mt-8 pt-6 border-t border-white/6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <p class="text-sm text-gray-400">© <span id="footer-year"></span> — مساحتي الشخصية — "حيث تتقاطع الأفكار مع التنفيذ"</p>
+        <p class="text-sm text-gray-400">© <span id="footer-year"></span> — مساحتي الشخصية — "حيث تتقاطع الأفكار مع
+          التنفيذ"</p>
         <div class="flex items-center gap-4">
           <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline">شروط الاستخدام</a>
           <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline">خريطة الموقع</a>
-          <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline" title="تم التطوير بواسطة عماد حسان">تطوير: عماد</a>
+          <a href="#" class="text-xs text-gray-400 hover:text-white focus:underline"
+            title="تم التطوير بواسطة عماد حسان">تطوير: عماد</a>
         </div>
       </div>
     </div>
 
     <script>
       // تحديث السنة تلقائيًا
-      try{ document.getElementById('footer-year').textContent = new Date().getFullYear(); }catch(e){}
+      try { document.getElementById('footer-year').textContent = new Date().getFullYear(); } catch (e) { }
     </script>
   </footer>
 
-  <!-- SCRIPTS -->
+
   <script>
-    /* ==== المتغيرات الأساسية - موحدة بدون تكرار ==== */
+
+
     const exploreBtn = document.getElementById('explore-button');
     const postsContainer = document.getElementById('posts-container');
     const stickyBar = document.getElementById('sticky-bar');
@@ -303,6 +373,7 @@
     const darkModeToggle = document.getElementById('darkModeToggle');
 
     /* ==== تمرير إلى القسم عند الضغط على زر الاستكشاف ==== */
+    
     if (exploreBtn) {
       exploreBtn.addEventListener('click', () => {
         const target = document.getElementById('posts-container');
@@ -311,6 +382,7 @@
     }
 
     /* ==== إدارة شريط التنقل الثابت (للوصول) ==== */
+   
     window.addEventListener('scroll', () => {
       const scrollPosition = window.scrollY || window.pageYOffset;
       if (scrollPosition > 100) {
@@ -325,7 +397,7 @@
       }
     });
 
-    /* ==== روابط الشريط والتمرير السلس (مع مراعاة الوصول) ==== */
+
     document.querySelectorAll('#sticky-bar nav a, #main-nav a').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
@@ -335,7 +407,7 @@
             e.preventDefault();
             targetElement.scrollIntoView({ behavior: 'smooth' });
             setTimeout(() => {
-              try { targetElement.focus({ preventScroll: true }); } catch(e){}
+              try { targetElement.focus({ preventScroll: true }); } catch (e) { }
             }, 500);
           }
         }
@@ -346,27 +418,30 @@
     let vantaEffect = null;
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+
     function createVanta() {
-    if (!window.VANTA || !window.VANTA.NET) return false;
-    if (window._vanta_running) return true; // حماية من التهيئة المزدوجة
+      if (!window.VANTA || !window.VANTA.NET) return false;
+      if (window._vanta_running) return true; // حماية من التهيئة المزدوجة
 
-    // نستخدم الـ ints المطابقة للـ HEX المذكور
-    window._vanta_instance = window.VANTA.NET({
-      el: "#vanta-bg",
-      mouseControls: true,
-      touchControls: true,
-      minHeight: 200.00,
-      minWidth: 200.00,
-      scale: 1.00,
-      scaleMobile: 1.00,
-      color: 0x8b5cf6,        // electric purple
-      backgroundColor: 0x071025 // very dark indigo
-      // يمكنك إضافة خصائص إضافية إذا رغبت (مثل: spacing, showDots, maxDistance...)
-    });
+      // نستخدم الـ ints المطابقة للـ HEX المذكور
+      window._vanta_instance = window.VANTA.NET({
+        el: "#vanta-bg",
+        mouseControls: true,
+        touchControls: true,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: 0x8b5cf6,        // electric purple
+        backgroundColor: 0x071025 // very dark indigo
+        // يمكنك إضافة خصائص إضافية إذا رغبت (مثل: spacing, showDots, maxDistance...)
+      });
 
-    window._vanta_running = true;
-    return true;
-  }
+      window._vanta_running = true;
+      return true;
+    }
+
+
     function initVantaIfAllowed() {
       if (!toggleVantaBtn) return;
       if (prefersReducedMotion) {
@@ -374,6 +449,8 @@
         toggleVantaBtn.textContent = 'الحركة معطلة (prefers-reduced-motion)';
         return;
       }
+
+
 
       if (createVanta()) {
         toggleVantaBtn.setAttribute('aria-pressed', 'false');
@@ -385,194 +462,173 @@
     }
 
     function destroyVanta() {
-    try {
-      if (window._vanta_instance && typeof window._vanta_instance.destroy === 'function') {
-        window._vanta_instance.destroy();
-      }
-    } catch(e){}
-    window._vanta_instance = null;
-    window._vanta_running = false;
-  }
-
-const heroPhrase = "مساحتي الخاصة لأكتب عن رحلتي كمهندس، بين شغف التعلم وتجارب الحياة اليومية. أشارك نفسي المتعبة أولا ثم الآخرين";
-
-
-
-
-
-  // دالة لإظهار الكلمات تدريجيًا
-  function animateHeroPhrase(options = {}) {
-    const container = document.getElementById('hero-title-visual');
-    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (!container) return;
-    // نضع نسخة مقروءة لقراء الشاشة مسبقًا (عناصر مخفية مرئيًا)
-    // (إذا كان لديك h1 بصري مخفي فهو يكفي؛ لكن هذه الطريقة تضمن أن القارئ يرى النص الكامل)
-    const sr = document.createElement('div');
-    sr.className = 'visually-hidden';
-    sr.textContent = heroPhrase ;//+ " — " + heroSub
-    container.appendChild(sr);
-
-    // العرض المرئي داخل الـ hero (hidden aria)
-    const visualWrap = document.createElement('div');
-    visualWrap.className = 'hero-center';
-    visualWrap.setAttribute('aria-hidden', 'true');
-
-    // إن رغب المستخدم بتقليل الحركة، نعرض النص كـ plain text بدون أنيميشن
-    if (prefersReducedMotion) {
-      const p = document.createElement('p');
-      p.className = 'hero-word';
-      p.style.opacity = 1;
-      p.style.transform = 'none';
-      p.textContent = heroPhrase;
-      visualWrap.appendChild(p);
-
-      // const sub = document.createElement('span');
-      // sub.className = 'hero-subtext';
-      // sub.textContent = heroSub;
-      // visualWrap.appendChild(sub);
-
-      container.appendChild(visualWrap);
-      return;
-    }
-
-    // تقسيم العبارة إلى كلمات وعرض تدريجي
-    const words = heroPhrase.split(' ');
-    words.forEach((word, i) => {
-      const span = document.createElement('span');
-      span.className = 'hero-word';
-      span.textContent = word + (i < words.length - 1 ? ' ' : '');
-      // نستخدم تأخيرًا يتم وضعه كسلوك مباشر بدلاً من إنشاء keyframes مكررة
-      span.style.transitionDelay = (i * 130) + 'ms';
-      visualWrap.appendChild(span);
-    });
-
-    // نضيف السطر الفرعي بعد انتهاء عرض الكلمات (تأخير يساوي عدد الكلمات * delay)
-    // const sub = document.createElement('div');
-    // sub.className = 'hero-subtext';
-    // sub.textContent = heroSub;
-    // sub.style.opacity = 0;
-    // sub.style.transition = 'opacity 420ms ease';
-    // sub.style.transitionDelay = (words.length * 130 + 200) + 'ms';
-    // visualWrap.appendChild(sub);
-
-    container.appendChild(visualWrap);
-
-    // نفعل العرض بعد frame قصير حتى تُطبَق التأخيرات
-    requestAnimationFrame(() => {
-      const elems = visualWrap.querySelectorAll('.hero-word');
-      elems.forEach(el => el.classList.add('show'));
-      // إظهار السطر الفرعي
-      setTimeout(() => { sub.style.opacity = 1; }, words.length * 130 + 200);
-    });
-  }
-
- window.addEventListener('load', function () {
-    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // إذا لم يطلب المستخدم تقليل الحركة نهيئ Vanta تلقائيًا
-    if (!prefersReducedMotion) {
-      // ننتظر مكتبات Vanta (قد تكون محملة بـ defer) ـ نجرب عدة مرات قصيرة
-      let tries = 0;
-      const maxTries = 8;
-      const t = setInterval(() => {
-        tries++;
-        if (window.VANTA && window.VANTA.NET) {
-          clearInterval(t);
-          createVanta(); // تهيئة بألوان المطابقة
-        } else if (tries >= maxTries) {
-          clearInterval(t);
+      try {
+        if (window._vanta_instance && typeof window._vanta_instance.destroy === 'function') {
+          window._vanta_instance.destroy();
         }
-      }, 250);
+      } catch (e) { }
+      window._vanta_instance = null;
+      window._vanta_running = false;
     }
 
-    // بدء أنيميشن العبارة (مع مراعاة reduced-motion داخلياً)
-    animateHeroPhrase();
-  });
+    const heroPhrase = "مساحتي الخاصة لأكتب عن رحلتي كمهندس، بين شغف التعلم وتجارب الحياة اليومية. أشارك نفسي المتعبة أولا ثم الآخرين";
 
-  // تنظيف عند الخروج
-  window.addEventListener('beforeunload', function () {
-    destroyVanta();
-  });
 
-  // إذا أردت ربط الزر لإيقاف/تشغيل: يفترض أنك تملك #toggle-vanta
-  const toggleBtn = document.getElementById('toggle-vanta');
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', function () {
-      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReduced) {
-        this.setAttribute('aria-pressed', 'true');
-        this.textContent = 'الحركة معطلة (prefers-reduced-motion)';
+
+
+
+    function animateHeroPhrase(options = {}) {
+      const container = document.getElementById('hero-title-visual');
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!container) return;
+      // نضع نسخة مقروءة لقراء الشاشة مسبقًا (عناصر مخفية مرئيًا)
+      // (إذا كان لديك h1 بصري مخفي فهو يكفي؛ لكن هذه الطريقة تضمن أن القارئ يرى النص الكامل)
+      const sr = document.createElement('div');
+      sr.className = 'visually-hidden';
+      sr.textContent = heroPhrase;//+ " — " + heroSub
+      container.appendChild(sr);
+
+      // العرض المرئي داخل الـ hero (hidden aria)
+      const visualWrap = document.createElement('div');
+      visualWrap.className = 'hero-center';
+      visualWrap.setAttribute('aria-hidden', 'true');
+
+      // إن رغب المستخدم بتقليل الحركة، نعرض النص كـ plain text بدون أنيميشن
+      if (prefersReducedMotion) {
+        const p = document.createElement('p');
+        p.className = 'hero-word';
+        p.style.opacity = 1;
+        p.style.transform = 'none';
+        p.textContent = heroPhrase;
+        visualWrap.appendChild(p);
+
+        container.appendChild(visualWrap);
         return;
       }
 
-      const isOff = this.getAttribute('aria-pressed') === 'true' || !window._vanta_running;
-      if (isOff) {
-        // شغّل
-        if (createVanta()) {
-          this.setAttribute('aria-pressed', 'false');
-          this.textContent = '⏯️ إيقاف تأثير الخلفية';
-        }
-      } else {
-        // أوقف
-        destroyVanta();
-        this.setAttribute('aria-pressed', 'true');
-        this.textContent = '✅ الخلفية متوقفة';
-      }
-    });
-  }
- 
-    if (toggleVantaBtn) {
-      toggleVantaBtn.addEventListener('click', function () {
-        if (prefersReducedMotion) {
-          this.setAttribute('aria-pressed', 'true');
-          this.textContent = 'الحركة معطلة (prefers-reduced-motion)';
-          return;
-        }
-
-        const isStopped = this.getAttribute('aria-pressed') === 'true';
-        if (isStopped || !vantaEffect) {
-          if (createVanta()) {
-            this.setAttribute('aria-pressed', 'false');
-            this.textContent = '⏯️ إيقاف تأثير الخلفية';
-          } else {
-            this.textContent = 'جارٍ تهيئة الخلفية...';
-            let tries = 0;
-            const tryInterval = setInterval(() => {
-              tries++;
-              if (createVanta()) {
-                this.setAttribute('aria-pressed', 'false');
-                this.textContent = '⏯️ إيقاف تأثير الخلفية';
-                clearInterval(tryInterval);
-              } else if (tries > 6) {
-                this.textContent = 'تعذر تشغيل الخلفية';
-                clearInterval(tryInterval);
-              }
-            }, 300);
-          }
-        } else {
-          destroyVanta();
-        }
+      // تقسيم العبارة إلى كلمات وعرض تدريجي
+      const words = heroPhrase.split(' ');
+      words.forEach((word, i) => {
+        const span = document.createElement('span');
+        span.className = 'hero-word';
+        span.textContent = word + (i < words.length - 1 ? ' ' : '');
+        // نستخدم تأخيرًا يتم وضعه كسلوك مباشر بدلاً من إنشاء keyframes مكررة
+        span.style.transitionDelay = (i * 130) + 'ms';
+        visualWrap.appendChild(span);
       });
+
+
+
+      container.appendChild(visualWrap);
     }
 
-    /* تنظيف عند مغادرة الصفحة لتحرير الذاكرة */
-    window.addEventListener('beforeunload', function () {
-      if (vantaEffect && typeof vantaEffect.destroy === 'function') {
-        try { vantaEffect.destroy(); } catch (e) {}
-        vantaEffect = null;
-      }
-    });
+      window.addEventListener('load', function () {
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    /* ==== تحسين: تحميل المشاركات ديناميكيًا — ضع كودك في get-posts.js كما كان ---- */
+        // إذا لم يطلب المستخدم تقليل الحركة نهيئ Vanta تلقائيًا
+        if (!prefersReducedMotion) {
+          // ننتظر مكتبات Vanta (قد تكون محملة بـ defer) ـ نجرب عدة مرات قصيرة
+          let tries = 0;
+          const maxTries = 8;
+          const t = setInterval(() => {
+            tries++;
+            if (window.VANTA && window.VANTA.NET) {
+              clearInterval(t);
+              createVanta(); // تهيئة بألوان المطابقة
+            } else if (tries >= maxTries) {
+              clearInterval(t);
+            }
+          }, 250);
+        }
+
+        // بدء أنيميشن العبارة (مع مراعاة reduced-motion داخلياً)
+        animateHeroPhrase();
+      });
+
+      // تنظيف عند الخروج
+      window.addEventListener('beforeunload', function () {
+        destroyVanta();
+      });
+
+      // إذا أردت ربط الزر لإيقاف/تشغيل: يفترض أنك تملك #toggle-vanta
+      const toggleBtn = document.getElementById('toggle-vanta');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+          const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (prefersReduced) {
+            this.setAttribute('aria-pressed', 'true');
+            this.textContent = 'الحركة معطلة (prefers-reduced-motion)';
+            return;
+          }
+
+          const isOff = this.getAttribute('aria-pressed') === 'true' || !window._vanta_running;
+          if (isOff) {
+            // شغّل
+            if (createVanta()) {
+              this.setAttribute('aria-pressed', 'false');
+              this.textContent = '⏯️ إيقاف تأثير الخلفية';
+            }
+          } else {
+            // أوقف
+            destroyVanta();
+            this.setAttribute('aria-pressed', 'true');
+            this.textContent = '✅ الخلفية متوقفة';
+          }
+        });
+      }
+
+      if (toggleVantaBtn) {
+        toggleVantaBtn.addEventListener('click', function () {
+          if (prefersReducedMotion) {
+            this.setAttribute('aria-pressed', 'true');
+            this.textContent = 'الحركة معطلة (prefers-reduced-motion)';
+            return;
+          }
+
+          const isStopped = this.getAttribute('aria-pressed') === 'true';
+          if (isStopped || !vantaEffect) {
+            if (createVanta()) {
+              this.setAttribute('aria-pressed', 'false');
+              this.textContent = '⏯️ إيقاف تأثير الخلفية';
+            } else {
+              this.textContent = 'جارٍ تهيئة الخلفية...';
+              let tries = 0;
+              const tryInterval = setInterval(() => {
+                tries++;
+                if (createVanta()) {
+                  this.setAttribute('aria-pressed', 'false');
+                  this.textContent = '⏯️ إيقاف تأثير الخلفية';
+                  clearInterval(tryInterval);
+                } else if (tries > 6) {
+                  this.textContent = 'تعذر تشغيل الخلفية';
+                  clearInterval(tryInterval);
+                }
+              }, 300);
+            }
+          } else {
+            destroyVanta();
+          }
+        });
+      }
+
+      /* تنظيف عند مغادرة الصفحة لتحرير الذاكرة */
+      window.addEventListener('beforeunload', function () {
+        if (vantaEffect && typeof vantaEffect.destroy === 'function') {
+          try { vantaEffect.destroy(); } catch (e) { }
+          vantaEffect = null;
+        }
+      });
+ 
   </script>
 
-  <!-- ملفات خارجية -->
+  // <!-- ملفات خارجية -->
   <script type="module" src="Scripts/get-posts.js"></script>
   <script type="module" src="Scripts/log-visit.js"></script>
 
-  <!-- مكتبات Vanta -->
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js" defer></script>
 </body>
+
 </html>
