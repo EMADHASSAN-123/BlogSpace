@@ -543,15 +543,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
-  // Post editor modal
-  newPostBtn?.addEventListener('click', () => {
-    document.getElementById('post-id').value = '';
-    document.getElementById('post-title').value = '';
-    document.getElementById('post-excerpt').value = '';
-    document.getElementById('post-status').value = 'draft';
-    document.getElementById('modalTitle').textContent = 'إضافة تدوينة جديدة';
-    openPostEditor();
-  });
+  // // Post editor modal
+  // newPostBtn?.addEventListener('click', () => {
+  //   document.getElementById('post-id').value = '';
+  //   document.getElementById('post-title').value = '';
+  //   document.getElementById('post-excerpt').value = '';
+  //   document.getElementById('post-status').value = 'draft';
+  //   document.getElementById('modalTitle').textContent = 'إضافة تدوينة جديدة';
+  //   openPostEditor();
+  // });
   
   newPostAction?.addEventListener('click', () => {
     document.getElementById('post-id').value = '';
@@ -565,18 +565,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   closeEditorModal?.addEventListener('click', closePostEditor);
   
-  // Post form submission
-  // postForm?.addEventListener('submit', (e) => {
-  //   e.preventDefault();
-  //   savePost(document.getElementById('post-status').value);
-  // });
   
-  // Save draft button
-  // saveDraftBtn?.addEventListener('click', () => {
-  //   savePost('draft');
-  // });
-  
-  // Post view toggle
+
   gridViewBtn?.addEventListener('click', setGridView);
   listViewBtn?.addEventListener('click', setListView);
   

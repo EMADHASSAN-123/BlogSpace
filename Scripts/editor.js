@@ -1,31 +1,49 @@
-
 const postEditorModal = document.getElementById('postEditorModal');
 
+/* ---------- واجهات لفتح / غلق المودال ---------- */
 export function openPostEditor() {
   postEditorModal.classList.remove('hidden');
-  initTinyMCE();
+  // انتظر إطار واحد لو لزم لتجنب مشاكل قياس عناصر مخفية (اختياري):
+  requestAnimationFrame(() => initTinyMCE());
 }
 
 export function closePostEditor() {
   postEditorModal.classList.add('hidden');
+  // نزيل المحرر عند الإغلاق لتحرير الموارد ومنع نسخ متعددة:
+  const existing = tinymce.get('post-content');
+  if (existing) {
+    existing.remove();
+  }
 }
 
-// Initialize TinyMCE editor
 export function initTinyMCE() {
-  tinymce.remove('#post-content'); // Remove any existing instances
-   
+  const existing = tinymce.get('post-content');
+  if (existing) existing.remove();
+
   tinymce.init({
     selector: '#post-content',
-    plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-    tinycomments_mode: 'embedded',
-    tinycomments_author: 'Author name',
-    mergetags_list: [
-      { value: 'First.Name', title: 'First Name' },
-      { value: 'Email', title: 'Email' },
+    license_key: 'gpl',
+    plugins: [
+      'anchor','autolink','charmap','codesample','emoticons',
+      'link','lists','searchreplace','table',
+      'visualblocks','wordcount','directionality'
+      // لاحظ: لم ندرج 'image' أو 'media' إن أردنا منع أيقونة الإدراج — لكن إن أردت زر إدراج الصورة بالرابط ضع 'image' هنا
     ],
-    directionality: 'rtl',
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline | link | align lineheight | ltr rtl | numlist bullist indent outdent | codesample | emoticons charmap | removeformat | wordcount',
+    menubar: false,
+    height: 500,
+    branding: false,
     language: 'ar',
-    height: 400
+    directionality: 'rtl',
+    skin: 'oxide-dark',
+    skin_url: './tinymce/skins/ui/oxide',
+    content_css: '.tinymce/skins/content/dark/content.min.css',
+    placeholder: 'ابدأ الكتابة هنا...',
+    toolbar_sticky: true,
+    paste_data_images: false, // يمنع لصق الصور كـ base64
+    autosave_ask_before_unload: true,
+    setup: function(editor) {
+      editor.on('change', function() { editor.save(); });
+    }
   });
 }

@@ -1,102 +1,75 @@
-tinymce.init({
-  selector: '#post-content',
-  plugins: [
-    'anchor', 'autolink', 'charmap', 'codesample', 'emoticons',
-    'link', 'lists', 'media', 'searchreplace', 'table',
-    'visualblocks', 'wordcount', 'directionality', 'image'
-  ],
-  toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | ltr rtl | numlist bullist indent outdent | codesample | emoticons charmap | removeformat | wordcount',
-  menubar: false,
-  height: 500,
-  branding: false,
-  language: 'ar',
-  directionality: 'rtl',
-  skin: 'oxide-dark',
-  content_css: 'dark',
-  placeholder: 'ابدأ الكتابة هنا...',
-  toolbar_sticky: true,
-  autosave_ask_before_unload: true,
-  images_upload_handler: handleImageUpload,
-  setup: function(editor) {
-    editor.on('change', function() {
-      editor.save(); // Save content to textarea on change
-    });
-  }
-});
+// save-post.js
+import { getAccessToken } from './auth-guard.js';
 
-import { supabase } from './supabaseClient.js';
-import {getAccessToken} from './auth-guard.js';
-const SUPABASE_URL= "https://vbnnzmhopcjlkvtuubcj.supabase.co";
+// ضع رابط مشروع Supabase (أو نقطة النهاية العامة لوظائف Edge)
+const SUPABASE_URL = 'hhttps://vbnnzmhopcjlkvtuubcj.supabase.co'; // استبدلها
 
 
-
-// / عناصر النموذج
+// عناصر الـ DOM
 const form = document.getElementById('postForm');
 const publishBtn = document.getElementById('publishPostBtn');
 const draftBtn = document.getElementById('saveDraftBtn');
-const notification = (msg, ok = true) => showNotification(msg, ok);
 
-
-
-// مساعدة لتنظيف المدخلات
-function sanitizeInput(str) {
-  return String(str || '').trim();
-} 
-
-
-
-// Image upload handler (placeholder implementation)
-async function handleImageUpload(blobInfo, progress) {
-  return new Promise((resolve, reject) => {
-    // In a real implementation, you would upload to Supabase storage
-    // For now, we'll convert to base64 for demo purposes
-    const reader = new FileReader();
-    reader.onload = function() {
-      resolve(reader.result);
-    };
-    reader.onerror = function() {
-      reject('Image upload failed');
-    };
-    reader.readAsDataURL(blobInfo.blob());
-  });
-}
-
-
-
-// دالة عامة لإظهار إشعار
+// بسيطة لإظهار إشعار (يمكن استبدالها بصندوق خاص بك)
 function showNotification(message, type = 'success') {
   const notify = document.createElement('div');
   notify.textContent = message;
   notify.className = `fixed top-5 right-5 px-4 py-2 rounded-xl shadow-lg text-white z-50
     ${type === 'success' ? 'bg-green-600' : 'bg-red-600'}`;
   document.body.appendChild(notify);
-
   setTimeout(() => notify.remove(), 3000);
 }
 
-// دالة عامة لإغلاق الفورم
-function closeForm() {
-  const postEditorModal = document.getElementById('postEditorModal');
-  if (postEditorModal) {
-    // form.reset(); // يمسح الحقول
-    postEditorModal.classList.add('hidden'); // يخفي الفورم (تأكد أن عندك CSS للـ hidden)
-  }
+// تنظيف المدخلات
+function sanitizeInput(str) {
+  return String(str || '').trim();
 }
-// استدعاء Edge Function عامة (POST) مع توكن
-async function callEdgeFunction(name, payload, method = 'POST') {
-    const token = await getAccessToken();
-    if (!token) throw new Error('غير مصادق — يرجى تسجيل الدخول.');
 
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/${name}`, {
+// توليد مقتطف من المحتوى (حذف HTML ثم أخذ أول 150 حرف)
+function generateExcerpt(html, max = 150) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html || '';
+  const text = tmp.textContent || tmp.innerText || '';
+  return text.trim().slice(0, max);
+}
+
+// دالة انتظار TinyMCE instance جاهز
+function waitForEditor(id = 'post-content', timeout = 5000) {
+  return new Promise((resolve, reject) => {
+    const interval = 50;
+    let waited = 0;
+    const timer = setInterval(() => {
+      const ed = window.tinymce ? window.tinymce.get(id) : null;
+      if (ed) {
+        clearInterval(timer);
+        resolve(ed);
+      } else {
+        waited += interval;
+        if (waited >= timeout) {
+          clearInterval(timer);
+          reject(new Error('TinyMCE did not initialize in time'));
+        }
+      }
+    }, interval);
+  });
+}
+
+// نداء لواجهة Edge Function الموجودة عندك
+async function callEdgeFunction(name, payload, method = 'POST') {
+  const token = await getAccessToken();
+  if (!token) throw new Error('غير مصادق — يرجى تسجيل الدخول.');
+
+  const url = `${SUPABASE_URL}/functions/v1/${name}`;
+  const res = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
     body: method === 'GET' ? undefined : JSON.stringify(payload)
-});
+  });
 
- const data = await res.json().catch(() => null);
+  const data = await res.json().catch(() => null);
   if (!res.ok) {
     const errMsg = data?.error || (data?.message ? data.message : `خطأ من الخادم (${res.status})`);
     const err = new Error(typeof errMsg === 'string' ? errMsg : JSON.stringify(errMsg));
@@ -106,91 +79,90 @@ async function callEdgeFunction(name, payload, method = 'POST') {
   return data;
 }
 
-  
+// الدالة العامة للحفظ (نستعملها لنشر أو حفظ مسودة)
+export async function savePost(e, isDraft = false) {
+  if (e) e.preventDefault();
 
-// Save post function (reusable for both publish and draft)
-async function savePost(e, isDraft = false) {
-  e && e.preventDefault();
+  // انتظر المحرر إن لم يكن جاهزاً
+  let editor;
+  try {
+    editor = await waitForEditor('post-content', 5000);
+  } catch (err) {
+    console.error(err);
+    showNotification('المحرر غير جاهز. حاول مرة أخرى.', 'error');
+    return;
+  }
 
   // اجمع الحقول
-  const postId = sanitizeInput(document.getElementById('post-id').value);
-  const title = sanitizeInput(document.getElementById('post-title').value);
-  const category = sanitizeInput(document.getElementById('post-category').value);
-  const status = isDraft ? 'draft' : sanitizeInput(document.getElementById('post-status').value);
+  const postIdEl = document.getElementById('post-id');
+  const postId = postIdEl ? sanitizeInput(postIdEl.value) : '';
+  const title = sanitizeInput(document.getElementById('post-title')?.value);
+  const category = sanitizeInput(document.getElementById('post-category')?.value);
+  const status = isDraft ? 'draft' : sanitizeInput(document.getElementById('post-status')?.value || 'published');
   const excerptField = document.getElementById('post-excerpt');
-  let excerpt = sanitizeInput(excerptField.value);
-  const content = tinymce.get('post-content').getContent();
+  let excerpt = excerptField ? sanitizeInput(excerptField.value) : '';
+  const content = editor.getContent();
 
   // تحقق سريع
-  if (!title || title.length < 3) return notification('الرجاء إدخال عنوان صالح (3 أحرف على الأقل).', false);
-  if (!content || content.length < 10) return notification('المحتوى قصير جدًا.', false);
+  if (!title || title.length < 3) {
+    showNotification('الرجاء إدخال عنوان صالح (3 أحرف على الأقل).', 'error');
+    return;
+  }
+  // نتحقق من النص الفعلي بعد إزالة الوسوم
+  const tmp = document.createElement('div');
+  tmp.innerHTML = content || '';
+  const plainText = (tmp.textContent || tmp.innerText || '').trim();
+  if (!plainText || plainText.length < 10) {
+    showNotification('المحتوى قصير جداً.', 'error');
+    return;
+  }
   if (!excerpt) excerpt = generateExcerpt(content);
 
-  // ضبط حالة الأزرار
-  const origPublishHTML = publishBtn.innerHTML;
-  const origDraftHTML = draftBtn.innerHTML;
-  publishBtn.disabled = true;
-  draftBtn.disabled = true;
-  publishBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> جاري الحفظ...';
-  draftBtn.innerHTML = 'جاري الحفظ...';
+  // تعطيل الأزرار وإظهار حالة loading
+  const origPublishHTML = publishBtn ? publishBtn.innerHTML : 'نشر';
+  const origDraftHTML = draftBtn ? draftBtn.innerHTML : 'حفظ';
+  if (publishBtn) { publishBtn.disabled = true; publishBtn.innerHTML = 'جاري الحفظ...'; }
+  if (draftBtn) { draftBtn.disabled = true; draftBtn.innerHTML = 'جاري الحفظ...'; }
 
   try {
-    // payload نجهزه (لا نرسل author_id من الواجهة — الخادم يفرضه)
-    const payload = {
-      title,
-      content,
-      excerpt,
-      status,
-      category
-    };
+    const payload = { title, content, excerpt, status, category };
 
-    // إذا كان لدينا postId موجود: نطلب تحديثًا (اختياري — يتطلب وجود update-post function)
     if (postId) {
-      // استدعاء update-post
+      // تحديث منشور
       const body = { id: postId, ...payload };
       await callEdgeFunction('update-post', body, 'PATCH');
-      notification('تم تحديث التدوينة بنجاح.');
+      showNotification('تم تحديث التدوينة بنجاح.');
     } else {
-      // استدعاء create-post
+      // إنشاء منشور جديد
       await callEdgeFunction('create-post', payload, 'POST');
-      notification(isDraft ? 'تم حفظ المسودة بنجاح.' : 'تم نشر التدوينة بنجاح.');
+      showNotification(isDraft ? 'تم حفظ المسودة بنجاح.' : 'تم نشر التدوينة بنجاح.');
       // إعادة تعيين الحقول
-      form.reset();
-      tinymce.get('post-content').setContent('');
+      if (form) form.reset();
+      editor.setContent(''); // تفريغ المحرر
     }
-    closeForm();
 
-    // Optionally: refresh list of posts in dashboard here
+    // إغلاق الفورم إن أردت
+    const postEditorModal = document.getElementById('postEditorModal');
+    if (postEditorModal) postEditorModal.classList.add('hidden');
+
+    // هنا يمكنك إعادة تحميل قائمة المنشورات أو تحديث الواجهة محليًا
   } catch (err) {
     console.error('Save post error:', err);
-    if (err.status === 401) notification('الجلسة انتهت — يرجى تسجيل الدخول مجددًا.', false);
-    else if (err.status === 403) notification('لا تملك صلاحية القيام بهذه العملية.', false);
-    else notification(err.message || 'حدث خطأ أثناء الحفظ.', false);
+    if (err.status === 401) showNotification('الجلسة انتهت — يرجى تسجيل الدخول مجددًا.', 'error');
+    else if (err.status === 403) showNotification('لا تملك صلاحية القيام بهذه العملية.', 'error');
+    else showNotification(err.message || 'حدث خطأ أثناء الحفظ.', 'error');
   } finally {
-    publishBtn.disabled = false;
-    draftBtn.disabled = false;
-    publishBtn.innerHTML = origPublishHTML;
-    draftBtn.innerHTML = origDraftHTML;
+    if (publishBtn) { publishBtn.disabled = false; publishBtn.innerHTML = origPublishHTML; }
+    if (draftBtn) { draftBtn.disabled = false; draftBtn.innerHTML = origDraftHTML; }
   }
 }
 
-// عند تحميل الصفحة
-// event listeners
+// ربط الأحداث عند التحميل
 window.addEventListener('DOMContentLoaded', () => {
-
-  form.addEventListener('submit', (e) => savePost(e, false));
-  draftBtn.addEventListener('click', (e) => savePost(e, true));
-
-  // auto-generate excerpt as user types (optional)
-  // ensure tinymce is initialized
-  const editor = tinymce.get('post-content');
-  if (editor) {
-    editor.on('keyup', () => {
-      const excerptField = document.getElementById('post-excerpt');
-      if (excerptField && !excerptField.value) {
-        const content = editor.getContent();
-        excerptField.value = generateExcerpt(content);
-      }
-    });
+  if (form) {
+    form.addEventListener('submit', (e) => savePost(e, false));
+  }
+  if (draftBtn) {
+    draftBtn.addEventListener('click', (e) => savePost(e, true));
   }
 });
