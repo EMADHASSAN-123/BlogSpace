@@ -543,25 +543,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
-  // // Post editor modal
-  // newPostBtn?.addEventListener('click', () => {
-  //   document.getElementById('post-id').value = '';
-  //   document.getElementById('post-title').value = '';
-  //   document.getElementById('post-excerpt').value = '';
-  //   document.getElementById('post-status').value = 'draft';
-  //   document.getElementById('modalTitle').textContent = 'إضافة تدوينة جديدة';
-  //   openPostEditor();
-  // });
-  
-  newPostAction?.addEventListener('click', () => {
+  // Post editor modal
+  newPostBtn?.addEventListener('click', () => {
     document.getElementById('post-id').value = '';
     document.getElementById('post-title').value = '';
     document.getElementById('post-excerpt').value = '';
     document.getElementById('post-status').value = 'draft';
     document.getElementById('modalTitle').textContent = 'إضافة تدوينة جديدة';
     openPostEditor();
-    quickActionsMenu.classList.add('hidden');
   });
+  
+  // newPostAction?.addEventListener('click', () => {
+  //   document.getElementById('post-id').value = '';
+  //   document.getElementById('post-title').value = '';
+  //   document.getElementById('post-excerpt').value = '';
+  //   document.getElementById('post-status').value = 'draft';
+  //   document.getElementById('modalTitle').textContent = 'إضافة تدوينة جديدة';
+  //   openPostEditor();
+  //   quickActionsMenu.classList.add('hidden');
+  // });
   
   closeEditorModal?.addEventListener('click', closePostEditor);
   
