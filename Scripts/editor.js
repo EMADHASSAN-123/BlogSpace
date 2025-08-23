@@ -37,7 +37,7 @@ export function initTinyMCE() {
     directionality: 'rtl',
     skin: 'oxide-dark',
     skin_url: './tinymce/skins/ui/oxide',
-    content_css: '.tinymce/skins/content/dark/content.min.css',
+    content_css: './tinymce/skins/content/dark/content.min.css',
     placeholder: 'ابدأ الكتابة هنا...',
     toolbar_sticky: true,
     paste_data_images: false, // يمنع لصق الصور كـ base64
