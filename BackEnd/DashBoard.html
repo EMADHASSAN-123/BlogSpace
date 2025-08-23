@@ -20,7 +20,14 @@
   <!-- <script src="https://cdn.tiny.cloud/1/p4gxatbojnoqjdbkkkpt8umssc8hcf1ag1p47lu7747ppq6l/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script> -->
 
   <!-- <script src="../Scripts/theme-init.js"></script> -->
-  <script src="../Scripts/tinymce/tinymce.min.js"></script>
+<script src="./Scripts/tinymce/tinymce.min.js"></script>
+
+  <!-- 2) تحميل الموديولات بالترتيب: editor ثم save-post ثم dashboard -->
+  <script type="module" src="./Scripts/editor.js"></script>
+  <script type="module" src="./Scripts/save-post.js"></script>
+  <script type="module" src="./Scripts/dashboard.js"></script>
+
+  
   <style>
     html {
       scroll-behavior: smooth;
@@ -771,16 +778,14 @@
       </button>
     </div>
   </div>
-  <script type="module" src="../Scripts/editor.js" defer></script>
 
   <!-- <script src="../Scripts/theme-toggle.js" defer></script> -->
-    <script type="module" src="../Scripts/save-post.js"></script>
 
 
   <!-- <script src="../Scripts/LogVisit.js" ></script> -->
    <script type="module" src="../Scripts/log-visit.js"></script>
 
-  <script type="module" src="../Scripts/dashboard.js"></script>
+
 
 
 </body>

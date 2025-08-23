@@ -1,5 +1,5 @@
 // save-post.js
-import { getAccessToken } from './auth-guard.js';
+import { getAccessToken } from '../../Scripts/auth-guard.js';
 
 // ضع رابط مشروع Supabase (أو نقطة النهاية العامة لوظائف Edge)
 const SUPABASE_URL = 'hhttps://vbnnzmhopcjlkvtuubcj.supabase.co'; // استبدلها
