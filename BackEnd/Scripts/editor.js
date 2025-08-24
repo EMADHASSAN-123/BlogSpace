@@ -45,8 +45,8 @@ window.tinymce.init({
     directionality: 'rtl',
     skin: 'oxide-dark',
     // تأكد من أن المسار صحيح بالنسبة لملف Dashboard.html
-    skin_url: './Scripts/tinymce/skins/ui/oxide',
-    content_css: './Scripts/tinymce/skins/content/dark/content.min.css',
+    skin_url: './tinymce/skins/ui/oxide',
+    content_css: './tinymce/skins/content/dark/content.min.css',
     placeholder: 'ابدأ الكتابة هنا...',
     toolbar_sticky: true,
     paste_data_images: false, // يمنع لصق الصور كمضمّن
