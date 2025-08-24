@@ -5,7 +5,7 @@ import { getAccessToken } from '../../Scripts/auth-guard.js';
 const SUPABASE_URL = 'hhttps://vbnnzmhopcjlkvtuubcj.supabase.co'; // استبدلها
 
 
-// عناصر الـ DOM
+// عناصر الـ 
 const form = document.getElementById('postForm');
 const publishBtn = document.getElementById('publishPostBtn');
 const draftBtn = document.getElementById('saveDraftBtn');
