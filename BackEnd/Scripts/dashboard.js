@@ -3,7 +3,7 @@ import { supabase } from '../../Scripts/supabaseClient.js';
 import { protectPage } from '../../Scripts/auth-guard.js';
 import { loadPosts } from '../../Scripts/load-posts.js';
 import { closePostEditor , openPostEditor ,initTinyMCE }  from './editor.js';
-import { savePost } from './save-Post.js';
+import { savePost } from './save-post.js';
 
 
 // Check if user is authenticated, redirect to login if not
